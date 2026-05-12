@@ -1,7 +1,7 @@
-package com.hotel.booking.api.domain.roomType.repository;
+package com.hotel.booking.api.domain.roomtype.repository;
 
 import com.hotel.booking.api.domain.hotel.model.entity.Hotel;
-import com.hotel.booking.api.domain.roomType.entity.RoomType;
+import com.hotel.booking.api.domain.roomtype.entity.RoomType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,10 +1,9 @@
-package com.hotel.booking.api.domain.roomType.controller;
+package com.hotel.booking.api.domain.roomtype.controller;
 
-import com.hotel.booking.api.domain.roomType.entity.RoomType;
-import com.hotel.booking.api.domain.roomType.service.RoomTypeService;
-import com.hotel.booking.api.domain.roomType.web.request.CreateRoomTypeRequest;
-import com.hotel.booking.api.domain.roomType.web.request.UpdateRoomTypeRequest;
-import com.hotel.booking.api.domain.roomType.web.response.RoomTypeResponse;
+import com.hotel.booking.api.domain.roomtype.service.RoomTypeService;
+import com.hotel.booking.api.domain.roomtype.web.request.CreateRoomTypeRequest;
+import com.hotel.booking.api.domain.roomtype.web.request.UpdateRoomTypeRequest;
+import com.hotel.booking.api.domain.roomtype.web.response.RoomTypeResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

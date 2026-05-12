@@ -1,7 +1,7 @@
-package com.hotel.booking.api.domain.roomType.component;
+package com.hotel.booking.api.domain.roomtype.component;
 
-import com.hotel.booking.api.domain.roomType.entity.RoomType;
-import com.hotel.booking.api.domain.roomType.web.response.RoomTypeResponse;
+import com.hotel.booking.api.domain.roomtype.entity.RoomType;
+import com.hotel.booking.api.domain.roomtype.web.response.RoomTypeResponse;
 import org.springframework.stereotype.Component;
 
 @Component

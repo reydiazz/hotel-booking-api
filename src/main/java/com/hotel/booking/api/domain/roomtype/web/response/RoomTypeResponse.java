@@ -1,4 +1,4 @@
-package com.hotel.booking.api.domain.roomType.web.response;
+package com.hotel.booking.api.domain.roomtype.web.response;
 
 import java.math.BigDecimal;
 

@@ -1,4 +1,4 @@
-package com.hotel.booking.api.domain.roomType.exception;
+package com.hotel.booking.api.domain.roomtype.exception;
 
 import com.hotel.booking.api.shared.exception.ErrorCode;
 import org.springframework.http.HttpStatus;

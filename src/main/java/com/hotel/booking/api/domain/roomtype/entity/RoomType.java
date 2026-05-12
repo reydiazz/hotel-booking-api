@@ -1,4 +1,4 @@
-package com.hotel.booking.api.domain.roomType.entity;
+package com.hotel.booking.api.domain.roomtype.entity;
 
 import com.hotel.booking.api.domain.hotel.model.entity.Hotel;
 import jakarta.persistence.*;
