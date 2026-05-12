@@ -12,11 +12,12 @@ public class BusinessExceptionHandler {
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ErrorResponse> handle(BusinessException exception) {
         ErrorResponse response = new ErrorResponse(
+                exception.getHttpStatus().value(),
                 exception.getCode(),
                 exception.getMessage(),
                 LocalDateTime.now()
         );
-        return ResponseEntity.badRequest().body(response);
+        return ResponseEntity.status(exception.getHttpStatus()).body(response);
     }
 
 }
