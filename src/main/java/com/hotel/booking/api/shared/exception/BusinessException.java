@@ -1,5 +1,7 @@
 package com.hotel.booking.api.shared.exception;
 
+import org.springframework.http.HttpStatus;
+
 public class BusinessException extends RuntimeException {
 
     private final ErrorCode code;
@@ -11,6 +13,10 @@ public class BusinessException extends RuntimeException {
 
     public String getCode() {
         return code.getCode();
+    }
+
+    public HttpStatus getHttpStatus() {
+        return code.getHttpStatus();
     }
 
 }
