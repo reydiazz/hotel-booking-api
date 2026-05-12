@@ -1,0 +1,95 @@
+package com.hotel.booking.api.domain.roomType.service;
+
+import com.hotel.booking.api.domain.hotel.exception.HotelCodeAlreadyExistsException;
+import com.hotel.booking.api.domain.hotel.exception.HotelNotFoundException;
+import com.hotel.booking.api.domain.hotel.model.entity.Hotel;
+import com.hotel.booking.api.domain.hotel.service.HotelService;
+import com.hotel.booking.api.domain.hotel.web.request.CreateHotelRequest;
+import com.hotel.booking.api.domain.roomType.component.RoomTypeMapper;
+import com.hotel.booking.api.domain.roomType.entity.RoomType;
+import com.hotel.booking.api.domain.roomType.exception.RoomTypeCodeAlreadyExistsException;
+import com.hotel.booking.api.domain.roomType.exception.RoomTypeHasRelationsException;
+import com.hotel.booking.api.domain.roomType.exception.RoomTypeNotFoundException;
+import com.hotel.booking.api.domain.roomType.repository.RoomTypeRepository;
+import com.hotel.booking.api.domain.roomType.web.request.CreateRoomTypeRequest;
+import com.hotel.booking.api.domain.roomType.web.request.UpdateRoomTypeRequest;
+import com.hotel.booking.api.domain.roomType.web.response.RoomTypeResponse;
+import com.hotel.booking.api.shared.utils.CodeGenerator;
+import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@RequiredArgsConstructor
+public class RoomTypeService {
+
+    private final HotelService hotelService;
+    private final RoomTypeRepository repository;
+    private final RoomTypeMapper mapper;
+    public final static String PREFIX = "RTE";
+
+    @Transactional(readOnly = true)
+    public Page<RoomTypeResponse> findAll(Pageable pageable) {
+        return repository.findAll(pageable).map(mapper::toResponse);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<RoomTypeResponse> findByHotelCode(String hotelCode, Pageable pageable) {
+        Hotel hotel = hotelService.findByIdOrThrow(hotelCode);
+        return repository.findByHotel(hotel,pageable).map(mapper::toResponse);
+    }
+
+    @Transactional
+    public RoomTypeResponse create(CreateRoomTypeRequest request) {
+        Hotel hotel = hotelService.findByIdOrThrow(request.hotelCode());
+        String code = CodeGenerator.next(PREFIX);
+        RoomType roomType = new RoomType(
+                code,
+                hotel,
+                request.name(),
+                request.description(),
+                request.capacity(),
+                request.basePrice()
+        );
+        try {
+            RoomType saved = repository.save(roomType);
+            return mapper.toResponse(saved);
+        }
+        catch (DataIntegrityViolationException e){
+            throw new RoomTypeCodeAlreadyExistsException();
+        }
+    }
+
+    @Transactional
+    public RoomTypeResponse update(String code,UpdateRoomTypeRequest request) {
+        RoomType roomType = findByIdOrThrow(code);
+        roomType.update(
+                request.name(),
+                request.description(),
+                request.capacity(),
+                request.basePrice()
+        );
+        return mapper.toResponse(roomType);
+    }
+
+    @Transactional
+    public void delete(String code) {
+        RoomType roomType = findByIdOrThrow(code);
+        try {
+            repository.delete(roomType);
+            repository.flush();
+        } catch (DataIntegrityViolationException e){
+            throw new RoomTypeHasRelationsException();
+        }
+    }
+
+    public RoomType findByIdOrThrow(String code) {
+        return repository.findById(code).orElseThrow(
+                ()-> new RoomTypeNotFoundException(code)
+        );
+    }
+
+}
