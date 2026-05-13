@@ -35,7 +35,7 @@ CREATE TABLE rooms
         'OUT_OF_SERVICE'
     ) NOT NULL DEFAULT 'AVAILABLE',
 
-    last_cleaned   DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_cleaned   DATETIME   NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     FOREIGN KEY (hotel_code) REFERENCES hotels (code),
     FOREIGN KEY (room_type_code) REFERENCES room_types (code)
