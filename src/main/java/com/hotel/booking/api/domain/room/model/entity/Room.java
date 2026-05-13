@@ -37,7 +37,7 @@ public class Room {
     @Column(name = "status", nullable = false)
     private RoomStatus status = RoomStatus.AVAILABLE;
 
-    @Column(name = "last_cleaned", insertable = false, nullable = false)
+    @Column(name = "last_cleaned", nullable = false)
     private LocalDateTime lastCleaned;
 
     public Room(String code, Hotel hotel, RoomType roomType, Integer number, Integer floor) {
@@ -46,6 +46,7 @@ public class Room {
         this.roomType = roomType;
         this.number = number;
         this.floor = floor;
+        this.lastCleaned = LocalDateTime.now();
     }
 
     public void update(RoomType roomType, Integer number, Integer floor) {
