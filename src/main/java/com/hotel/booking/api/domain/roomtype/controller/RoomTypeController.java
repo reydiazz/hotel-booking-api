@@ -32,14 +32,14 @@ public class RoomTypeController {
     }
 
     @PutMapping("/{code}")
-    public ResponseEntity<RoomTypeResponse> update(@PathVariable String code,@RequestBody @Valid UpdateRoomTypeRequest request){
-        RoomTypeResponse response = service.update(code,request);
+    public ResponseEntity<RoomTypeResponse> updateByCode(@PathVariable String code,@RequestBody @Valid UpdateRoomTypeRequest request){
+        RoomTypeResponse response = service.updateByCode(code,request);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{code}")
-    public ResponseEntity<RoomTypeResponse> delete(@PathVariable String code){
-        service.delete(code);
+    public ResponseEntity<RoomTypeResponse> deleteByCode(@PathVariable String code){
+        service.deleteByCode(code);
         return ResponseEntity.noContent().build();
     }
 

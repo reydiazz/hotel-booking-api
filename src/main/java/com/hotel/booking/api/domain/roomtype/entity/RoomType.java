@@ -8,7 +8,8 @@ import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
 
-@Entity(name = "room_types")
+@Entity
+@Table(name = "room_types")
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class RoomType {

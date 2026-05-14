@@ -7,4 +7,5 @@ public class HotelHasRelationsException extends BusinessException {
     public HotelHasRelationsException() {
         super("Hotel cannot be deleted because it is associated with other entities", HotelErrorCode.HAS_RELATIONS);
     }
+
 }

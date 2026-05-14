@@ -38,13 +38,13 @@ public class HotelController {
     }
 
     @PutMapping("/{code}")
-    public ResponseEntity<HotelResponse> update(@PathVariable String code, @RequestBody @Valid UpdateHotelRequest request) {
-        HotelResponse response = service.update(code, request);
+    public ResponseEntity<HotelResponse> updateByCode(@PathVariable String code, @RequestBody @Valid UpdateHotelRequest request) {
+        HotelResponse response = service.updateByCode(code, request);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{code}")
-    public ResponseEntity<HotelResponse> delete(@PathVariable String code) {
+    public ResponseEntity<HotelResponse> deleteByCode(@PathVariable String code) {
         service.delete(code);
         return ResponseEntity.noContent().build();
     }

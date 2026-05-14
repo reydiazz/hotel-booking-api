@@ -5,7 +5,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-@Entity(name = "hotels")
+@Entity
+@Table(name = "hotels")
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class Hotel {

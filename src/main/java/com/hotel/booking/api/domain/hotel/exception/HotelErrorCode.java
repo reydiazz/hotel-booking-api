@@ -24,4 +24,5 @@ public enum HotelErrorCode implements ErrorCode {
     public HttpStatus getHttpStatus() {
         return httpStatus;
     }
+
 }

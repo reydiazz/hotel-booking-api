@@ -32,7 +32,7 @@ public class HotelService {
 
     @Transactional(readOnly = true)
     public HotelResponse findByCode(String code) {
-        Hotel hotel = findByIdOrThrow(code);
+        Hotel hotel = findByCodeOrThrow(code);
         return mapper.toResponse(hotel);
     }
 
@@ -50,15 +50,14 @@ public class HotelService {
         try {
             Hotel saved = repository.save(hotel);
             return mapper.toResponse(saved);
-        }
-        catch (DataIntegrityViolationException e){
+        } catch (DataIntegrityViolationException e) {
             throw new HotelCodeAlreadyExistsException();
         }
     }
 
     @Transactional
-    public HotelResponse update(String code, UpdateHotelRequest request) {
-        Hotel hotel = findByIdOrThrow(code);
+    public HotelResponse updateByCode(String code, UpdateHotelRequest request) {
+        Hotel hotel = findByCodeOrThrow(code);
         hotel.update(
                 request.name(),
                 request.address(),
@@ -71,18 +70,18 @@ public class HotelService {
 
     @Transactional
     public void delete(String code) {
-        Hotel hotel = findByIdOrThrow(code);
+        Hotel hotel = findByCodeOrThrow(code);
         try {
             repository.delete(hotel);
             repository.flush();
-        }catch (DataIntegrityViolationException e){
+        } catch (DataIntegrityViolationException e) {
             throw new HotelHasRelationsException();
         }
     }
 
-    public Hotel findByIdOrThrow(String code) {
+    public Hotel findByCodeOrThrow(String code) {
         return repository.findById(code).orElseThrow(
-                ()-> new HotelNotFoundException(code)
+                () -> new HotelNotFoundException(code)
         );
     }
 

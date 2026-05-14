@@ -47,15 +47,15 @@ public class RoomService {
 
     @Transactional(readOnly = true)
     public Page<RoomResponse> findByHotelCode(String hotelCode, Pageable pageable) {
-        Hotel hotel = hotelService.findByIdOrThrow(hotelCode);
+        Hotel hotel = hotelService.findByCodeOrThrow(hotelCode);
         return repository.findByHotel(hotel, pageable).map(mapper::toResponse);
     }
 
     @Transactional
     public RoomResponse create(CreateRoomRequest request) {
         String code = CodeGenerator.next(PREFIX);
-        Hotel hotel = hotelService.findByIdOrThrow(request.hotelCode());
-        RoomType type = typeService.findByIdOrThrow(request.typeCode());
+        Hotel hotel = hotelService.findByCodeOrThrow(request.hotelCode());
+        RoomType type = typeService.findByCodeOrThrow(request.typeCode());
         Room room = new Room(
                 code,
                 hotel,
@@ -72,9 +72,9 @@ public class RoomService {
     }
 
     @Transactional
-    public RoomResponse update(String code, UpdateRoomRequest request) {
+    public RoomResponse updateByCode(String code, UpdateRoomRequest request) {
         Room room = findByCodeOrThrow(code);
-        RoomType type = typeService.findByIdOrThrow(request.typeCode());
+        RoomType type = typeService.findByCodeOrThrow(request.typeCode());
         room.update(
                 type,
                 request.number(),
@@ -98,7 +98,7 @@ public class RoomService {
     }
 
     @Transactional
-    public void delete(String code) {
+    public void deleteByCode(String code) {
         Room room = findByCodeOrThrow(code);
         try {
             repository.delete(room);

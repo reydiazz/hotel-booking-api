@@ -39,8 +39,8 @@ public class RoomController {
     }
 
     @PutMapping("/{code}")
-    public ResponseEntity<RoomResponse> update(@PathVariable String code, @RequestBody @Valid UpdateRoomRequest request) {
-        RoomResponse response = service.update(code, request);
+    public ResponseEntity<RoomResponse> updateByCode(@PathVariable String code, @RequestBody @Valid UpdateRoomRequest request) {
+        RoomResponse response = service.updateByCode(code, request);
         return ResponseEntity.ok(response);
     }
 
@@ -58,7 +58,7 @@ public class RoomController {
 
     @DeleteMapping("/{code}")
     public ResponseEntity<RoomResponse> deleteByCode(@PathVariable String code) {
-        service.delete(code);
+        service.deleteByCode(code);
         return ResponseEntity.noContent().build();
     }
 

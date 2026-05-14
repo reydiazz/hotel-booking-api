@@ -35,15 +35,15 @@ public class RoomTypeService {
 
     @Transactional(readOnly = true)
     public Page<RoomTypeResponse> findByHotelCode(String hotelCode, Pageable pageable) {
-        Hotel hotel = hotelService.findByIdOrThrow(hotelCode);
-        return repository.findByHotel(hotel,pageable).map(mapper::toResponse);
+        Hotel hotel = hotelService.findByCodeOrThrow(hotelCode);
+        return repository.findByHotel(hotel, pageable).map(mapper::toResponse);
     }
 
     @Transactional
     public RoomTypeResponse create(CreateRoomTypeRequest request) {
-        Hotel hotel = hotelService.findByIdOrThrow(request.hotelCode());
+        Hotel hotel = hotelService.findByCodeOrThrow(request.hotelCode());
         String code = CodeGenerator.next(PREFIX);
-        RoomType roomType = new RoomType(
+        RoomType type = new RoomType(
                 code,
                 hotel,
                 request.name(),
@@ -52,40 +52,39 @@ public class RoomTypeService {
                 request.basePrice()
         );
         try {
-            RoomType saved = repository.save(roomType);
+            RoomType saved = repository.save(type);
             return mapper.toResponse(saved);
-        }
-        catch (DataIntegrityViolationException e){
+        } catch (DataIntegrityViolationException e) {
             throw new RoomTypeCodeAlreadyExistsException();
         }
     }
 
     @Transactional
-    public RoomTypeResponse update(String code,UpdateRoomTypeRequest request) {
-        RoomType roomType = findByIdOrThrow(code);
-        roomType.update(
+    public RoomTypeResponse updateByCode(String code, UpdateRoomTypeRequest request) {
+        RoomType type = findByCodeOrThrow(code);
+        type.update(
                 request.name(),
                 request.description(),
                 request.capacity(),
                 request.basePrice()
         );
-        return mapper.toResponse(roomType);
+        return mapper.toResponse(type);
     }
 
     @Transactional
-    public void delete(String code) {
-        RoomType roomType = findByIdOrThrow(code);
+    public void deleteByCode(String code) {
+        RoomType type = findByCodeOrThrow(code);
         try {
-            repository.delete(roomType);
+            repository.delete(type);
             repository.flush();
-        } catch (DataIntegrityViolationException e){
+        } catch (DataIntegrityViolationException e) {
             throw new RoomTypeHasRelationsException();
         }
     }
 
-    public RoomType findByIdOrThrow(String code) {
+    public RoomType findByCodeOrThrow(String code) {
         return repository.findById(code).orElseThrow(
-                ()-> new RoomTypeNotFoundException(code)
+                () -> new RoomTypeNotFoundException(code)
         );
     }
 
