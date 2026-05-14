@@ -5,6 +5,6 @@ import jakarta.validation.constraints.NotNull;
 
 public record UpdateRoomStatusRequest(
         @NotNull(message = "Room status must not be empty")
-        RoomStatus roomStatus
+        RoomStatus status
 ) {
 }

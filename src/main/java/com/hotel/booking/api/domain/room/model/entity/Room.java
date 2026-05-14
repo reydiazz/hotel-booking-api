@@ -10,7 +10,8 @@ import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@Entity(name = "rooms")
+@Entity
+@Table(name = "rooms")
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Room {
@@ -25,7 +26,7 @@ public class Room {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_type_code", nullable = false)
-    private RoomType roomType;
+    private RoomType type;
 
     @Column(name = "number", nullable = false)
     private Integer number;
@@ -40,17 +41,17 @@ public class Room {
     @Column(name = "last_cleaned", nullable = false)
     private LocalDateTime lastCleaned;
 
-    public Room(String code, Hotel hotel, RoomType roomType, Integer number, Integer floor) {
+    public Room(String code, Hotel hotel, RoomType type, Integer number, Integer floor) {
         this.code = code;
         this.hotel = hotel;
-        this.roomType = roomType;
+        this.type = type;
         this.number = number;
         this.floor = floor;
         this.lastCleaned = LocalDateTime.now();
     }
 
     public void update(RoomType roomType, Integer number, Integer floor) {
-        this.roomType = roomType;
+        this.type = roomType;
         this.number = number;
         this.floor = floor;
     }

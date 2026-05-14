@@ -5,6 +5,7 @@ import com.hotel.booking.api.shared.exception.BusinessException;
 public class RoomHasRelationsException extends BusinessException {
 
     public RoomHasRelationsException() {
-        super("Room cannot be deleted because it is associated with other entities",RoomErrorCode.HAS_RELATIONS);
+        super("Room cannot be deleted because it is associated with other entities", RoomErrorCode.HAS_RELATIONS);
     }
+
 }

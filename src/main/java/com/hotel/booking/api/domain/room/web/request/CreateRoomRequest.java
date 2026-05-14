@@ -9,7 +9,7 @@ public record CreateRoomRequest(
         @NotBlank(message = "Hotel code must not be empty")
         String hotelCode,
         @NotBlank(message = "Room type code must not be empty")
-        String roomTypeCode,
+        String typeCode,
         @NotNull(message = "Room number is required")
         @Positive(message = "Room number must be greater than zero")
         Integer number,

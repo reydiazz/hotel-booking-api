@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 public record RoomResponse(
         String code,
         String hotelCode,
-        RoomTypeResponse roomType,
+        RoomTypeResponse type,
         Integer number,
         Integer floor,
         RoomStatus status,

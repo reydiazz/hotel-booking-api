@@ -28,11 +28,11 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class RoomService {
 
-    public static final String PREFIX = "ROM";
+    private final RoomMapper mapper;
     private final RoomRepository repository;
     private final HotelService hotelService;
-    private final RoomTypeService roomTypeService;
-    private final RoomMapper mapper;
+    private final RoomTypeService typeService;
+    public static final String PREFIX = "ROM";
 
     @Transactional(readOnly = true)
     public Page<RoomResponse> findAll(Pageable pageable) {
@@ -40,44 +40,43 @@ public class RoomService {
     }
 
     @Transactional(readOnly = true)
-    public RoomResponse findById(String code) {
-        Room room = findByIdOrThrow(code);
+    public RoomResponse findByCode(String code) {
+        Room room = findByCodeOrThrow(code);
         return mapper.toResponse(room);
     }
 
     @Transactional(readOnly = true)
     public Page<RoomResponse> findByHotelCode(String hotelCode, Pageable pageable) {
         Hotel hotel = hotelService.findByIdOrThrow(hotelCode);
-        return repository.findByHotel(hotel,pageable).map(mapper::toResponse);
+        return repository.findByHotel(hotel, pageable).map(mapper::toResponse);
     }
 
     @Transactional
     public RoomResponse create(CreateRoomRequest request) {
         String code = CodeGenerator.next(PREFIX);
         Hotel hotel = hotelService.findByIdOrThrow(request.hotelCode());
-        RoomType roomType = roomTypeService.findByIdOrThrow(request.roomTypeCode());
+        RoomType type = typeService.findByIdOrThrow(request.typeCode());
         Room room = new Room(
                 code,
                 hotel,
-                roomType,
+                type,
                 request.number(),
                 request.floor()
         );
         try {
             Room saved = repository.save(room);
             return mapper.toResponse(saved);
-        }
-        catch (DataIntegrityViolationException e){
+        } catch (DataIntegrityViolationException e) {
             throw new RoomCodeAlreadyExistsException();
         }
     }
 
     @Transactional
     public RoomResponse update(String code, UpdateRoomRequest request) {
-        Room room = findByIdOrThrow(code);
-        RoomType roomType = roomTypeService.findByIdOrThrow(request.roomTypeCode());
+        Room room = findByCodeOrThrow(code);
+        RoomType type = typeService.findByIdOrThrow(request.typeCode());
         room.update(
-                roomType,
+                type,
                 request.number(),
                 request.floor()
         );
@@ -86,33 +85,33 @@ public class RoomService {
 
     @Transactional
     public RoomResponse updateRoomStatus(String code, UpdateRoomStatusRequest request) {
-        Room room = findByIdOrThrow(code);
-        room.updateStatus(request.roomStatus());
+        Room room = findByCodeOrThrow(code);
+        room.updateStatus(request.status());
         return mapper.toResponse(room);
     }
 
     @Transactional
     public RoomResponse updateLastCleaned(String code) {
-        Room room = findByIdOrThrow(code);
+        Room room = findByCodeOrThrow(code);
         room.updateLastCleaned(LocalDateTime.now());
         return mapper.toResponse(room);
     }
 
     @Transactional
     public void delete(String code) {
-        Room room = findByIdOrThrow(code);
+        Room room = findByCodeOrThrow(code);
         try {
             repository.delete(room);
             repository.flush();
-        }
-        catch (DataIntegrityViolationException e){
+        } catch (DataIntegrityViolationException e) {
             throw new RoomHasRelationsException();
         }
     }
 
-    public Room findByIdOrThrow(String code) {
+    public Room findByCodeOrThrow(String code) {
         return repository.findById(code).orElseThrow(
-                ()-> new RoomNotFoundException(code)
+                () -> new RoomNotFoundException(code)
         );
     }
+
 }

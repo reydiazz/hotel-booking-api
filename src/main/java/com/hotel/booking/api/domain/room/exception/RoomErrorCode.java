@@ -24,4 +24,5 @@ public enum RoomErrorCode implements ErrorCode {
     public HttpStatus getHttpStatus() {
         return httpStatus;
     }
+
 }
