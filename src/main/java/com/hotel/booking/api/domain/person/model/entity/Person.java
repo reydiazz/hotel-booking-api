@@ -5,14 +5,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "Persons")
+@Table(name = "persons")
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class Person {
