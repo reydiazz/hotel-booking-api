@@ -1,28 +1,27 @@
-package com.hotel.booking.api.domain.person.exception;
+package com.hotel.booking.api.domain.person.exception.customer;
 
 import com.hotel.booking.api.shared.exception.ErrorCode;
 import org.springframework.http.HttpStatus;
 
-public enum PersonErrorCode implements ErrorCode {
+public enum CustomerErrorCode implements ErrorCode {
 
-    CODE_ALREADY_EXISTS(HttpStatus.CONFLICT),
-    NOT_FOUND(HttpStatus.NOT_FOUND),
-    HAS_RELATIONS(HttpStatus.CONFLICT);
+    NOT_FOUND(HttpStatus.NOT_FOUND);
 
     private final HttpStatus httpStatus;
 
-     PersonErrorCode (HttpStatus httpStatus){
+    CustomerErrorCode(HttpStatus httpStatus) {
         this.httpStatus = httpStatus;
 
     }
 
     @Override
     public String getCode() {
-        return name ();
+        return name();
     }
 
     @Override
     public HttpStatus getHttpStatus() {
         return httpStatus;
     }
+
 }

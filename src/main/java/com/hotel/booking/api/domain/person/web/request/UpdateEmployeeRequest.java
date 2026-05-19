@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 public record UpdateEmployeeRequest(
-        @NotBlank(message = "Employee hotel is required")
+        @NotBlank(message = "Employee hotel code is required")
         String hotelCode,
         @NotNull(message = "Employee data is required")
         UpdatePersonRequest person,

@@ -1,6 +1,5 @@
 package com.hotel.booking.api.domain.person.web.request;
 
-import com.hotel.booking.api.domain.hotel.web.request.CreateHotelRequest;
 import com.hotel.booking.api.domain.person.model.enums.EmployeePosition;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
