@@ -3,13 +3,14 @@ package com.hotel.booking.api.domain.person.web.request;
 import com.hotel.booking.api.domain.hotel.web.request.CreateHotelRequest;
 import com.hotel.booking.api.domain.person.model.enums.EmployeePosition;
 import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 
 public record CreateEmployeeRequest(
-        @NotNull(message = "Employee hotel is required")
-        CreateHotelRequest hotel,
+        @NotBlank(message = "Employee hotel code is required")
+        String hotelCode,
         @NotNull(message = "Employee data is required")
         CreatePersonRequest person,
         @NotNull(message = "Employee position not be empty")

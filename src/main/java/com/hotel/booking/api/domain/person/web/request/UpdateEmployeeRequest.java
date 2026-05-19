@@ -13,7 +13,7 @@ public record UpdateEmployeeRequest(
         @NotNull(message = "Employee data is required")
         UpdatePersonRequest person,
         @NotNull(message = "Employee position not be empty")
-        EmployeePosition positive,
+        EmployeePosition position,
         @NotNull(message = "Employee salary not be empty")
         @DecimalMin(value = "0.01", message = "Employee salary  must be greater than zero")
         BigDecimal salary
