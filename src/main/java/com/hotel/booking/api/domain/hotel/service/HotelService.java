@@ -1,9 +1,7 @@
 package com.hotel.booking.api.domain.hotel.service;
 
 import com.hotel.booking.api.domain.hotel.component.HotelMapper;
-import com.hotel.booking.api.domain.hotel.exception.HotelCodeAlreadyExistsException;
-import com.hotel.booking.api.domain.hotel.exception.HotelHasRelationsException;
-import com.hotel.booking.api.domain.hotel.exception.HotelNotFoundException;
+import com.hotel.booking.api.domain.hotel.exception.hotel.HotelNotFoundException;
 import com.hotel.booking.api.domain.hotel.model.entity.Hotel;
 import com.hotel.booking.api.domain.hotel.repository.HotelRepository;
 import com.hotel.booking.api.domain.hotel.web.request.CreateHotelRequest;
@@ -11,7 +9,6 @@ import com.hotel.booking.api.domain.hotel.web.request.UpdateHotelRequest;
 import com.hotel.booking.api.domain.hotel.web.response.HotelResponse;
 import com.hotel.booking.api.shared.utils.CodeGenerator;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -47,16 +44,12 @@ public class HotelService {
                 request.country(),
                 request.phone()
         );
-        try {
-            Hotel saved = repository.save(hotel);
-            return mapper.toResponse(saved);
-        } catch (DataIntegrityViolationException e) {
-            throw new HotelCodeAlreadyExistsException();
-        }
+        Hotel saved = repository.save(hotel);
+        return mapper.toResponse(saved);
     }
 
     @Transactional
-    public HotelResponse updateByCode(String code, UpdateHotelRequest request) {
+    public HotelResponse update(String code, UpdateHotelRequest request) {
         Hotel hotel = findByCodeOrThrow(code);
         hotel.update(
                 request.name(),
@@ -71,12 +64,7 @@ public class HotelService {
     @Transactional
     public void delete(String code) {
         Hotel hotel = findByCodeOrThrow(code);
-        try {
-            repository.delete(hotel);
-            repository.flush();
-        } catch (DataIntegrityViolationException e) {
-            throw new HotelHasRelationsException();
-        }
+        repository.delete(hotel);
     }
 
     public Hotel findByCodeOrThrow(String code) {
