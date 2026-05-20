@@ -65,10 +65,10 @@ public class CustomerService {
     @Transactional
     public void delete(String code) {
         Customer customer = findByCodeOrThrow(code);
+        repository.delete(customer);
         personService.delete(
                 customer.getPerson().getCode()
         );
-        repository.delete(customer);
     }
 
     public Customer findByCodeOrThrow(String code) {

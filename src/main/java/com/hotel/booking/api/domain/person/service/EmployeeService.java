@@ -81,10 +81,10 @@ public class EmployeeService {
     @Transactional
     public void delete(String code) {
         Employee employee = findByCodeOrThrow(code);
+        repository.delete(employee);
         personService.delete(
                 employee.getPerson().getCode()
         );
-        repository.delete(employee);
     }
 
     public Employee findByCodeOrThrow(String code) {
