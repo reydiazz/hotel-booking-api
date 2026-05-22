@@ -1,0 +1,3 @@
+ALTER TABLE reservations
+    MODIFY COLUMN check_in DATETIME NULL,
+    MODIFY COLUMN check_out DATETIME NULL;
