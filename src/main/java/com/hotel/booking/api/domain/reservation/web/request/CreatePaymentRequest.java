@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 
-public record CreatePaymentReservationRequest(
+public record CreatePaymentRequest(
         @NotNull(message = "Payment method not be empty")
         PaymentMethod method,
         @NotNull(message = "Payment status not be empty")
