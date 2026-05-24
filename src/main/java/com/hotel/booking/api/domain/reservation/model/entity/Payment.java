@@ -3,7 +3,6 @@ package com.hotel.booking.api.domain.reservation.model.entity;
 import com.hotel.booking.api.domain.auth.model.entity.User;
 import com.hotel.booking.api.domain.reservation.model.enums.PaymentMethod;
 import com.hotel.booking.api.domain.reservation.model.enums.PaymentStatus;
-import com.hotel.booking.api.domain.reservation.model.enums.ReservationStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

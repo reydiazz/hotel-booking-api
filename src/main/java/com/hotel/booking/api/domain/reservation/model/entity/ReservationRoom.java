@@ -29,11 +29,16 @@ public class ReservationRoom {
     @Column(name = "price_per_night", nullable = false)
     private BigDecimal pricePerNight;
 
-    public ReservationRoom(String code, Reservation reservation, Room room, BigDecimal pricePerNight){
+    @Column(name = "nights", nullable = false)
+    private Integer nights;
+
+
+    public ReservationRoom(String code, Reservation reservation, Room room, BigDecimal pricePerNight, Integer nights) {
         this.code = code;
         this.reservation = reservation;
         this.room = room;
         this.pricePerNight = pricePerNight;
+        this.nights = nights;
     }
 
 }

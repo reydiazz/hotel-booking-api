@@ -4,6 +4,7 @@ import com.hotel.booking.api.domain.hotel.exception.room.RoomNotFoundException;
 import com.hotel.booking.api.domain.hotel.model.entity.Hotel;
 import com.hotel.booking.api.domain.hotel.component.RoomMapper;
 import com.hotel.booking.api.domain.hotel.model.entity.Room;
+import com.hotel.booking.api.domain.hotel.model.enums.RoomStatus;
 import com.hotel.booking.api.domain.hotel.repository.RoomRepository;
 import com.hotel.booking.api.domain.hotel.web.request.CreateRoomRequest;
 import com.hotel.booking.api.domain.hotel.web.request.UpdateRoomRequest;
@@ -93,9 +94,7 @@ public class RoomService {
     @Transactional
     public RoomResponse updateLastCleaned(String code) {
         Room room = findByCodeOrThrow(code);
-        room.updateLastCleaned(
-                LocalDateTime.now()
-        );
+        room.updateLastCleaned(LocalDateTime.now());
         return mapper.toResponse(room);
     }
 

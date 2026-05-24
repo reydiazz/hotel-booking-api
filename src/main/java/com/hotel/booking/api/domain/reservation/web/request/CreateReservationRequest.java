@@ -8,7 +8,7 @@ import java.util.List;
 public record CreateReservationRequest(
         @NotBlank(message = "Reservation customer code is required")
         String customerCode,
-        @NotNull(message = "Reservation rooms is required")
-        List<CreateReservationRoomRequest> rooms
+        @NotNull(message = "Reservation room is required")
+        CreateReservationRoomRequest room
 ) {
 }

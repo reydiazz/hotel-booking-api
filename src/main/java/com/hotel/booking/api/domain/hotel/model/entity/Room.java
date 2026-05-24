@@ -60,6 +60,7 @@ public class Room {
 
     public void updateLastCleaned(LocalDateTime lastCleaned) {
         this.lastCleaned = lastCleaned;
+        this.status = RoomStatus.AVAILABLE;
     }
 
 }

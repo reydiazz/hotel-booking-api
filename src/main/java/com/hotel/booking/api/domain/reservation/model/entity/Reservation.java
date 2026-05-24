@@ -8,6 +8,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -28,9 +29,6 @@ public class Reservation {
     @JoinColumn(name = "user_code", nullable = false)
     private User user;
 
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private ReservationStatus status = ReservationStatus.PENDING;
@@ -41,12 +39,19 @@ public class Reservation {
     @Column(name = "check_out")
     private LocalDateTime checkOut;
 
+    @Column(name = "total_amount", nullable = false)
+    private BigDecimal totalAmount;
+
+    @Column(insertable = false, updatable = false)
+    private LocalDateTime createdAt;
+
     public Reservation(String code, Customer customer, User user){
         this.code = code;
         this.customer = customer;
         this.user = user;
         this.checkIn = null;
         this.checkOut = null;
+        this.totalAmount = BigDecimal.ZERO;
     }
 
     public void defineCheckIn(){
@@ -55,6 +60,10 @@ public class Reservation {
 
     public void defineCheckOut(){
         this.checkOut = LocalDateTime.now();
+    }
+
+    public void addToTotalAmount(BigDecimal amount) {
+        this.totalAmount = this.totalAmount.add(amount);
     }
 
     public void updateStatus(ReservationStatus status){
