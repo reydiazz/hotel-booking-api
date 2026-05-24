@@ -3,14 +3,13 @@ package com.hotel.booking.api.domain.reservation.service;
 import com.hotel.booking.api.domain.hotel.model.entity.Room;
 import com.hotel.booking.api.domain.hotel.model.enums.RoomStatus;
 import com.hotel.booking.api.domain.hotel.service.RoomService;
-import com.hotel.booking.api.domain.reservation.exception.ReservationNotFoundException;
-import com.hotel.booking.api.domain.reservation.exception.ReservationRoomDirtyException;
-import com.hotel.booking.api.domain.reservation.exception.ReservationRoomOccupiedException;
-import com.hotel.booking.api.domain.reservation.exception.ReservationRoomOutOfServiceException;
+import com.hotel.booking.api.domain.reservation.component.ReservationRoomMapper;
+import com.hotel.booking.api.domain.reservation.exception.*;
 import com.hotel.booking.api.domain.reservation.model.entity.Reservation;
 import com.hotel.booking.api.domain.reservation.model.entity.ReservationRoom;
 import com.hotel.booking.api.domain.reservation.repository.ReservationRoomRepository;
 import com.hotel.booking.api.domain.reservation.web.request.CreateReservationRoomRequest;
+import com.hotel.booking.api.domain.reservation.web.response.ReservationRoomResponse;
 import com.hotel.booking.api.shared.utils.CodeGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,6 +26,16 @@ public class ReservationRoomService {
 
     private final ReservationRoomRepository repository;
     private final RoomService roomService;
+    private final ReservationRoomMapper mapper;
+
+    @Transactional(readOnly = true)
+    public ReservationRoomResponse findByReservation(Reservation reservation) {
+        Optional<ReservationRoom> reservationRoom = repository.findByReservation(reservation);
+        if (reservationRoom.isPresent()) {
+            return mapper.toResponse(reservationRoom.get());
+        }
+        throw new ReservationRoomNotFoundException();
+    }
 
     @Transactional
     public ReservationRoom create(Reservation reservation, CreateReservationRoomRequest request){

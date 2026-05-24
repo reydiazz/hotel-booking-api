@@ -6,10 +6,12 @@ import com.hotel.booking.api.domain.person.service.CustomerService;
 import com.hotel.booking.api.domain.reservation.component.ReservationMapper;
 import com.hotel.booking.api.domain.reservation.exception.ReservationNotFoundException;
 import com.hotel.booking.api.domain.reservation.model.entity.Reservation;
+import com.hotel.booking.api.domain.reservation.model.entity.ReservationRoom;
 import com.hotel.booking.api.domain.reservation.model.enums.ReservationStatus;
 import com.hotel.booking.api.domain.reservation.repository.ReservationRepository;
 import com.hotel.booking.api.domain.reservation.web.request.CreateReservationRequest;
 import com.hotel.booking.api.domain.reservation.web.response.ReservationResponse;
+import com.hotel.booking.api.domain.reservation.web.response.ReservationRoomResponse;
 import com.hotel.booking.api.shared.utils.CodeGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -32,6 +34,12 @@ public class ReservationService {
     @Transactional(readOnly = true)
     public Page<ReservationResponse> findAll(Pageable pageable) {
         return repository.findAll(pageable).map(mapper::toResponse);
+    }
+
+    @Transactional
+    public ReservationRoomResponse findDetailByCode(String code) {
+        Reservation reservation = findByCodeOrThrow(code);
+        return reservationRoomService.findByReservation(reservation);
     }
 
     @Transactional
