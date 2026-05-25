@@ -27,26 +27,20 @@ public class RoomTypeController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/hotel/{hotelCode}")
-    public ResponseEntity<Page<RoomTypeResponse>> findByHotel(@PathVariable String hotelCode, Pageable pageable) {
-        Page<RoomTypeResponse> response = service.findByHotel(hotelCode, pageable);
-        return ResponseEntity.ok(response);
-    }
-
     @PostMapping
-    public ResponseEntity<RoomTypeResponse> create(@RequestBody @Valid CreateRoomTypeRequest request){
+    public ResponseEntity<RoomTypeResponse> create(@RequestBody @Valid CreateRoomTypeRequest request) {
         RoomTypeResponse response = service.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping("/{code}")
-    public ResponseEntity<RoomTypeResponse> update(@PathVariable String code,@RequestBody @Valid UpdateRoomTypeRequest request){
-        RoomTypeResponse response = service.update(code,request);
+    public ResponseEntity<RoomTypeResponse> update(@PathVariable String code, @RequestBody @Valid UpdateRoomTypeRequest request) {
+        RoomTypeResponse response = service.update(code, request);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{code}")
-    public ResponseEntity<RoomTypeResponse> delete(@PathVariable String code){
+    public ResponseEntity<RoomTypeResponse> delete(@PathVariable String code) {
         service.delete(code);
         return ResponseEntity.noContent().build();
     }

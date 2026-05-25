@@ -17,10 +17,6 @@ public class RoomType {
     @Column(name = "code", nullable = false, unique = true)
     private String code;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "hotel_code", nullable = false)
-    private Hotel hotel;
-
     @Column(name = "name", nullable = false)
     private String name;
 
@@ -33,9 +29,8 @@ public class RoomType {
     @Column(name = "base_price", nullable = false)
     private BigDecimal basePrice;
 
-    public RoomType(String code, Hotel hotel, String name, String description, Integer capacity, BigDecimal basePrice) {
+    public RoomType(String code, String name, String description, Integer capacity, BigDecimal basePrice) {
         this.code = code;
-        this.hotel = hotel;
         this.name = name;
         this.description = description;
         this.capacity = capacity;

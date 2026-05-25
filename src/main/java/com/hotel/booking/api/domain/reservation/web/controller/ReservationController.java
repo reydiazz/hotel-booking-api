@@ -28,8 +28,8 @@ public class ReservationController {
     }
 
     @GetMapping("/detail/{code}")
-    public ResponseEntity<ReservationRoomResponse> findDetailByCode(@PathVariable String code){
-        ReservationRoomResponse response = service.findDetailByCode(code);
+    public ResponseEntity<ReservationRoomResponse> findDetail(@PathVariable String code){
+        ReservationRoomResponse response = service.findDetail(code);
         return ResponseEntity.ok(response);
     }
 
@@ -41,13 +41,13 @@ public class ReservationController {
 
     @PatchMapping("/checkIn/{code}")
     public ResponseEntity<ReservationResponse> defineCheckIn(@PathVariable String code){
-        ReservationResponse response = service.defineCheckIn(code);
+        ReservationResponse response = service.checkIn(code);
         return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/checkOut/{code}")
     public ResponseEntity<ReservationResponse> defineCheckOut(@PathVariable String code){
-        ReservationResponse response = service.defineCheckOut(code);
+        ReservationResponse response = service.checkOut(code);
         return ResponseEntity.ok(response);
     }
 

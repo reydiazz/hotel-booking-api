@@ -10,12 +10,13 @@ public class PaymentMapper {
     public PaymentResponse toResponse(Payment payment) {
         return new PaymentResponse(
                 payment.getCode(),
-                payment.getUser().getUsername(),
-                payment.getUser().getEmployee().getPerson().getFirstName(),
+                payment.getUser().getCode(),
+                payment.getUser().getPerson().getFullName(),
                 payment.getMethod(),
                 payment.getStatus(),
                 payment.getAmount(),
                 payment.getPaymentDate()
         );
     }
+
 }

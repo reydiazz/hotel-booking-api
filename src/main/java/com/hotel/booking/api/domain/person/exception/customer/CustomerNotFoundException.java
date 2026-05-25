@@ -5,7 +5,7 @@ import com.hotel.booking.api.shared.exception.BusinessException;
 public class CustomerNotFoundException extends BusinessException {
 
     public CustomerNotFoundException(String code) {
-        super("Customer with code " + code + " not found", CustomerErrorCode.NOT_FOUND);
+        super("Customer with code '%s' not found".formatted(code), CustomerErrorCode.CUSTOMER_NOT_FOUND);
     }
 
 }

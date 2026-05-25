@@ -8,8 +8,6 @@ import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 public record CreateRoomTypeRequest(
-        @NotBlank(message = "Room type hotel code must not be empty")
-        String hotelCode,
         @NotBlank(message = "Room type name must not be empty")
         String name,
         @NotBlank(message = "Room type description must not be empty")

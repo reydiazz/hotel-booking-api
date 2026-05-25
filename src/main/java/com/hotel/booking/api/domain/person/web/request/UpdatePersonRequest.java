@@ -7,7 +7,7 @@ import java.time.LocalDate;
 public record UpdatePersonRequest(
         @NotBlank(message = "Person first name not be empty")
         String firstName,
-        @NotBlank(message = "Person last name bot be empty")
+        @NotBlank(message = "Person last name not be empty")
         String lastname,
         String phone,
         LocalDate birthDate

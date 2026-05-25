@@ -4,7 +4,8 @@ import com.hotel.booking.api.domain.person.model.enums.DocumentTypeCustomer;
 
 public record CustomerResponse(
         String code,
-        PersonResponse person,
+        String fullName,
+        String phone,
         DocumentTypeCustomer documentType,
         String documentNumber
 ) {

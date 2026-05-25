@@ -3,7 +3,6 @@ package com.hotel.booking.api.domain.hotel.web.controller;
 import com.hotel.booking.api.domain.hotel.service.RoomService;
 import com.hotel.booking.api.domain.hotel.web.request.CreateRoomRequest;
 import com.hotel.booking.api.domain.hotel.web.request.UpdateRoomRequest;
-import com.hotel.booking.api.domain.hotel.web.request.UpdateRoomStatusRequest;
 import com.hotel.booking.api.domain.hotel.web.response.RoomResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -34,12 +33,6 @@ public class RoomController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/hotel/{hotelCode}")
-    public ResponseEntity<Page<RoomResponse>> findByHotel(@PathVariable String hotelCode, Pageable pageable) {
-        Page<RoomResponse> response = service.findByHotel(hotelCode, pageable);
-        return ResponseEntity.ok(response);
-    }
-
     @PostMapping
     public ResponseEntity<RoomResponse> create(@RequestBody @Valid CreateRoomRequest request) {
         RoomResponse response = service.create(request);
@@ -52,15 +45,15 @@ public class RoomController {
         return ResponseEntity.ok(response);
     }
 
-    @PatchMapping("/{code}/room-status")
-    public ResponseEntity<RoomResponse> updateRoomStatus(@PathVariable String code, @RequestBody @Valid UpdateRoomStatusRequest request) {
-        RoomResponse response = service.updateRoomStatus(code, request);
+    @PatchMapping("/{code}/clean")
+    public ResponseEntity<RoomResponse> clean(@PathVariable String code) {
+        RoomResponse response = service.clean(code);
         return ResponseEntity.ok(response);
     }
 
-    @PatchMapping("/{code}/clean")
-    public ResponseEntity<RoomResponse> updateLastCleaned(@PathVariable String code) {
-        RoomResponse response = service.updateLastCleaned(code);
+    @PatchMapping("/{code}/out-of-service")
+    public ResponseEntity<RoomResponse> markOutOfService(@PathVariable String code) {
+        RoomResponse response = service.markOutOfService(code);
         return ResponseEntity.ok(response);
     }
 

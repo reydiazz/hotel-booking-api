@@ -1,85 +1,61 @@
 package com.hotel.booking.api;
 
 import com.hotel.booking.api.domain.auth.model.entity.User;
+import com.hotel.booking.api.domain.auth.model.enums.Role;
 import com.hotel.booking.api.domain.auth.repository.UserRepository;
-import com.hotel.booking.api.domain.auth.service.AuthService;
-import com.hotel.booking.api.domain.hotel.service.RoomService;
-import com.hotel.booking.api.domain.reservation.model.enums.PaymentMethod;
-import com.hotel.booking.api.domain.reservation.service.PaymentService;
-import com.hotel.booking.api.domain.reservation.service.ReservationService;
-import com.hotel.booking.api.domain.reservation.web.request.CreatePaymentRequest;
-import com.hotel.booking.api.domain.reservation.web.request.CreateReservationRequest;
-import com.hotel.booking.api.domain.reservation.web.request.CreateReservationRoomRequest;
+import com.hotel.booking.api.domain.person.model.entity.Person;
+import com.hotel.booking.api.domain.person.service.PersonService;
+import com.hotel.booking.api.domain.person.web.request.CreatePersonRequest;
+import com.hotel.booking.api.shared.utils.CodeGenerator;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
-
-import java.math.BigDecimal;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import java.time.LocalDate;
 
 
 @SpringBootTest
 class ApplicationTests {
 
 	@Autowired
-	private ReservationService reservationService;
-
-	@Autowired
-	private PaymentService paymentService;
-
-	@MockitoBean
-	private AuthService authService;
-
-	@Autowired
-	private RoomService roomService;
-
-	@Autowired
 	private UserRepository userRepository;
 
+	@Autowired
+	private PersonService personService;
+
 	@Test
-	void contextLoads() {
+	void createUser(){
 
-		User user = userRepository
-				.findByUsername("U23226030")
-				.orElseThrow();
+		String firstName = "John";
+		String lastName = "Doe";
+		String phoneNumber = "+51 987 654 321";
+		LocalDate birthDate = LocalDate.of(2005, 11, 5);
 
-		Mockito.when(authService.getAuthenticatedUser())
-				.thenReturn(user);
+		String PREFIX_USER = "USR";
+		String code = CodeGenerator.next(PREFIX_USER);
+		String username = "U23226030";
+		String password = "root";
+		Role role = Role.ADMIN;
 
-		CreateReservationRoomRequest room = new CreateReservationRoomRequest(
-				"ROM260520170912UMCVF",
-				new BigDecimal("120"),
-				5
+		CreatePersonRequest request = new CreatePersonRequest(
+				firstName,
+				lastName,
+				phoneNumber,
+				birthDate
 		);
 
-		CreateReservationRequest request = new CreateReservationRequest(
-				"CUS260519160210RAUGN",
-				room
-		);
-		reservationService.create(request);
-	}
+		Person person = personService.create(request);
+		String passwordByCrypt = new BCryptPasswordEncoder().encode(password);
 
-	@Test
-	void changeStatusRoom(){
-		reservationService.cancel("RSV260523174021MT89A");
-	}
+		User user = new User(
+				code,
+				username,
+				passwordByCrypt,
+				role,
+				person);
 
-	@Test
-	void pay(){
-		User user = userRepository
-				.findByUsername("U23226030")
-				.orElseThrow();
+		userRepository.save(user);
 
-		Mockito.when(authService.getAuthenticatedUser())
-				.thenReturn(user);
-		CreatePaymentRequest  request = new CreatePaymentRequest("RSV260523211905461NZ", PaymentMethod.CASH,new BigDecimal("200"));
-		paymentService.create(request);
-	}
-
-	@Test
-	void reservation(){
-		roomService.updateLastCleaned("ROM260520170912UMCVF");
 	}
 
 }

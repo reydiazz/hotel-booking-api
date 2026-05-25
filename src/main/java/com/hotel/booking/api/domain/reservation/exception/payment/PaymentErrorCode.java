@@ -1,16 +1,17 @@
-package com.hotel.booking.api.domain.hotel.exception.hotel;
+package com.hotel.booking.api.domain.reservation.exception.payment;
 
 import com.hotel.booking.api.shared.exception.ErrorCode;
 import org.springframework.http.HttpStatus;
 
-public enum HotelErrorCode implements ErrorCode {
+public enum PaymentErrorCode implements ErrorCode {
 
-    NOT_FOUND(HttpStatus.NOT_FOUND);
+    PAYMENT_EXCEEDS_REMAIN_BALANCE(HttpStatus.CONFLICT);
 
     private final HttpStatus httpStatus;
 
-    HotelErrorCode(HttpStatus httpStatus) {
+    PaymentErrorCode(HttpStatus httpStatus) {
         this.httpStatus = httpStatus;
+
     }
 
     @Override

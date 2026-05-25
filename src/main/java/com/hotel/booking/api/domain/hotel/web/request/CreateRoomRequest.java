@@ -6,8 +6,6 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 
 public record CreateRoomRequest(
-        @NotBlank(message = "Hotel code must not be empty")
-        String hotelCode,
         @NotBlank(message = "Room type code must not be empty")
         String typeCode,
         @NotNull(message = "Room number is required")

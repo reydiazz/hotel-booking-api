@@ -27,7 +27,7 @@ public class AuthService {
         UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
         String token = jwtService.generateToken(verifyPrincipal(principal));
         User user = principal.user();
-        return new LoginResponse(token,mapper.toResponse(user));
+        return new LoginResponse(token, mapper.toResponse(user));
     }
 
     private UserPrincipal verifyPrincipal(UserPrincipal principal) {

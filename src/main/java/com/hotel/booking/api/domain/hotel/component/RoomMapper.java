@@ -9,12 +9,9 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class RoomMapper {
 
-    private final RoomTypeMapper typeMapper;
-
     public RoomResponse toResponse(Room room) {
         return new RoomResponse(
                 room.getCode(),
-                room.getHotel().getCode(),
                 room.getType().getCode(),
                 room.getType().getName(),
                 room.getNumber(),

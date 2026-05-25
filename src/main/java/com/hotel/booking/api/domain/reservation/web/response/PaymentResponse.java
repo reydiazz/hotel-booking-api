@@ -8,8 +8,8 @@ import java.time.LocalDateTime;
 
 public record PaymentResponse(
         String code,
-        String username,
-        String employeeName,
+        String userCode,
+        String userFullName,
         PaymentMethod method,
         PaymentStatus status,
         BigDecimal amount,

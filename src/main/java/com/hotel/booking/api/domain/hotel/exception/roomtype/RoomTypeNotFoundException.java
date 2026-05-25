@@ -5,7 +5,7 @@ import com.hotel.booking.api.shared.exception.BusinessException;
 public class RoomTypeNotFoundException extends BusinessException {
 
     public RoomTypeNotFoundException(String code) {
-        super("Room type with code " + code + " not found", RoomTypeErrorCode.NOT_FOUND);
+        super("Room type with code '%s' not found".formatted(code), RoomTypeErrorCode.NOT_FOUND);
     }
 
 }

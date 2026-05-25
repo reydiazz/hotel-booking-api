@@ -1,29 +1,15 @@
-CREATE TABLE hotels
-(
-    code    VARCHAR(20) PRIMARY KEY,
-    name    VARCHAR(100) NOT NULL,
-    address VARCHAR(150) NOT NULL,
-    city    VARCHAR(50)  NOT NULL,
-    country VARCHAR(50)  NOT NULL,
-    phone   VARCHAR(20)
-);
-
 CREATE TABLE room_types
 (
     code        VARCHAR(20) PRIMARY KEY,
-    hotel_code  VARCHAR(20)    NOT NULL,
     name        VARCHAR(50)    NOT NULL,
     capacity    INT            NOT NULL,
     base_price  DECIMAL(10, 2) NOT NULL,
-    description VARCHAR(150),
-
-    FOREIGN KEY (hotel_code) REFERENCES hotels (code)
+    description VARCHAR(150)
 );
 
 CREATE TABLE rooms
 (
     code           VARCHAR(20) PRIMARY KEY,
-    hotel_code     VARCHAR(20) NOT NULL,
     room_type_code VARCHAR(20) NOT NULL,
     number         INT         NOT NULL,
     floor          INT         NOT NULL,
@@ -33,11 +19,10 @@ CREATE TABLE rooms
         'OCCUPIED',
         'DIRTY',
         'OUT_OF_SERVICE'
-    ) NOT NULL DEFAULT 'AVAILABLE',
+        ) NOT NULL DEFAULT 'AVAILABLE',
 
-    last_cleaned   DATETIME   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_cleaned   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    FOREIGN KEY (hotel_code) REFERENCES hotels (code),
     FOREIGN KEY (room_type_code) REFERENCES room_types (code)
 );
 
@@ -50,24 +35,6 @@ CREATE TABLE persons
     birth_date DATE
 );
 
-CREATE TABLE employees
-(
-    code        VARCHAR(20) PRIMARY KEY,
-    hotel_code  VARCHAR(20)    NOT NULL,
-    person_code VARCHAR(20)    NOT NULL,
-
-    position    ENUM(
-        'MANAGER',
-        'RECEPTIONIST',
-        'HOUSEKEEPER'
-    ) NOT NULL,
-
-    salary      DECIMAL(10, 2) NOT NULL,
-
-    FOREIGN KEY (hotel_code) REFERENCES hotels (code),
-    FOREIGN KEY (person_code) REFERENCES persons (code)
-);
-
 CREATE TABLE customers
 (
     code            VARCHAR(20) PRIMARY KEY,
@@ -78,55 +45,55 @@ CREATE TABLE customers
         'PASSPORT',
         'FOREIGN_ID',
         'TAX_ID'
-    ) NOT NULL,
+        ) NOT NULL,
 
     document_number VARCHAR(20) NOT NULL,
 
     FOREIGN KEY (person_code) REFERENCES persons (code)
 );
 
-CREATE TABLE app_users
+CREATE TABLE users
 (
-    code          VARCHAR(20) PRIMARY KEY,
+    code        VARCHAR(20) PRIMARY KEY,
 
-    username      VARCHAR(50) UNIQUE NOT NULL,
-    password      VARCHAR(250)       NOT NULL,
+    person_code VARCHAR(20)        NOT NULL,
 
-    role          ENUM(
+    username    VARCHAR(50) UNIQUE NOT NULL,
+    password    VARCHAR(250)       NOT NULL,
+
+    role        ENUM(
         'ADMIN',
         'RECEPTION'
-    ) NOT NULL,
+        ) NOT NULL,
 
-    active        BOOLEAN            NOT NULL DEFAULT TRUE,
+    active      BOOLEAN NOT NULL DEFAULT TRUE,
 
-    employee_code VARCHAR(20),
-
-    FOREIGN KEY (employee_code) REFERENCES employees (code)
+    FOREIGN KEY (person_code) REFERENCES persons (code)
 );
 
 CREATE TABLE reservations
 (
     code          VARCHAR(20) PRIMARY KEY,
 
-    customer_code VARCHAR(20) NOT NULL,
-    user_code     VARCHAR(20) NOT NULL,
+    customer_code VARCHAR(20)    NOT NULL,
+    user_code     VARCHAR(20)    NOT NULL,
 
-    created_at    DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at    DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     status        ENUM(
         'PENDING',
         'ACTIVE',
         'DONE',
         'CANCELLED'
-    ) NOT NULL DEFAULT 'PENDING',
+        ) NOT NULL DEFAULT 'PENDING',
 
-    check_in      DATETIME    NOT NULL,
-    check_out     DATETIME    NOT NULL,
+    check_in      DATETIME       NULL,
+    check_out     DATETIME       NULL,
+
+    total_amount  DECIMAL(10, 2) NOT NULL,
 
     FOREIGN KEY (customer_code) REFERENCES customers (code),
-    FOREIGN KEY (user_code) REFERENCES app_users (code),
-
-    CHECK (check_out > check_in)
+    FOREIGN KEY (user_code) REFERENCES users (code)
 );
 
 CREATE TABLE reservation_rooms
@@ -137,6 +104,7 @@ CREATE TABLE reservation_rooms
     room_code        VARCHAR(20)    NOT NULL,
 
     price_per_night  DECIMAL(10, 2) NOT NULL,
+    nights           INT            NOT NULL CHECK (nights > 0),
 
     FOREIGN KEY (reservation_code) REFERENCES reservations (code),
     FOREIGN KEY (room_code) REFERENCES rooms (code),
@@ -156,7 +124,7 @@ CREATE TABLE payments
         'CARD',
         'TRANSFER',
         'DIGITAL_WALLET'
-    ) NOT NULL,
+        ) NOT NULL,
 
     status           ENUM(
         'PENDING',
@@ -164,11 +132,11 @@ CREATE TABLE payments
         'CANCELLED',
         'PARTIAL',
         'REFUNDED'
-    ) NOT NULL DEFAULT 'PENDING',
+        ) NOT NULL DEFAULT 'PENDING',
 
     amount           DECIMAL(10, 2) NOT NULL,
     payment_date     DATETIME,
 
     FOREIGN KEY (reservation_code) REFERENCES reservations (code),
-    FOREIGN KEY (user_code) REFERENCES app_users (code)
+    FOREIGN KEY (user_code) REFERENCES users (code)
 );

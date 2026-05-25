@@ -1,7 +1,6 @@
 package com.hotel.booking.api.domain.hotel.service;
 
 import com.hotel.booking.api.domain.hotel.exception.roomtype.RoomTypeNotFoundException;
-import com.hotel.booking.api.domain.hotel.model.entity.Hotel;
 import com.hotel.booking.api.domain.hotel.component.RoomTypeMapper;
 import com.hotel.booking.api.domain.hotel.model.entity.RoomType;
 import com.hotel.booking.api.domain.hotel.repository.RoomTypeRepository;
@@ -19,34 +18,20 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class RoomTypeService {
 
-    private final HotelService hotelService;
+    public final static String PREFIX = "RTE";
     private final RoomTypeRepository repository;
     private final RoomTypeMapper mapper;
-    public final static String PREFIX = "RTE";
 
     @Transactional(readOnly = true)
     public Page<RoomTypeResponse> findAll(Pageable pageable) {
-        return repository.findAll(pageable).map(mapper::toResponse);
-    }
-
-    @Transactional(readOnly = true)
-    public Page<RoomTypeResponse> findByHotel(String hotelCode, Pageable pageable) {
-        Hotel hotel = hotelService.findByCodeOrThrow(hotelCode);
-        return repository.findByHotel(hotel, pageable).map(mapper::toResponse);
+        Page<RoomType> page = repository.findAll(pageable);
+        return page.map(mapper::toResponse);
     }
 
     @Transactional
     public RoomTypeResponse create(CreateRoomTypeRequest request) {
-        Hotel hotel = hotelService.findByCodeOrThrow(request.hotelCode());
         String code = CodeGenerator.next(PREFIX);
-        RoomType type = new RoomType(
-                code,
-                hotel,
-                request.name(),
-                request.description(),
-                request.capacity(),
-                request.basePrice()
-        );
+        RoomType type = new RoomType(code, request.name(), request.description(), request.capacity(), request.basePrice());
         RoomType saved = repository.save(type);
         return mapper.toResponse(saved);
     }
@@ -54,12 +39,7 @@ public class RoomTypeService {
     @Transactional
     public RoomTypeResponse update(String code, UpdateRoomTypeRequest request) {
         RoomType type = findByCodeOrThrow(code);
-        type.update(
-                request.name(),
-                request.description(),
-                request.capacity(),
-                request.basePrice()
-        );
+        type.update(request.name(), request.description(), request.capacity(), request.basePrice());
         return mapper.toResponse(type);
     }
 

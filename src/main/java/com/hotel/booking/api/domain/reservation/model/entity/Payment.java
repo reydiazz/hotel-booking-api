@@ -43,7 +43,7 @@ public class Payment {
     @Column(name = "payment_date")
     private LocalDateTime paymentDate;
 
-    public Payment(String code, User user, Reservation reservation, PaymentMethod method, PaymentStatus status, BigDecimal amount){
+    public Payment(String code, User user, Reservation reservation, PaymentMethod method, PaymentStatus status, BigDecimal amount) {
         this.code = code;
         this.user = user;
         this.reservation = reservation;

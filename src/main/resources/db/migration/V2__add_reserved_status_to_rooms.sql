@@ -1,0 +1,8 @@
+ALTER TABLE rooms
+    MODIFY COLUMN status ENUM(
+    'AVAILABLE',
+    'RESERVED',
+    'OCCUPIED',
+    'DIRTY',
+    'OUT_OF_SERVICE'
+    ) NOT NULL DEFAULT 'AVAILABLE';

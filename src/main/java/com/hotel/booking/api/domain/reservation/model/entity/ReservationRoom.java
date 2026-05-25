@@ -32,7 +32,6 @@ public class ReservationRoom {
     @Column(name = "nights", nullable = false)
     private Integer nights;
 
-
     public ReservationRoom(String code, Reservation reservation, Room room, BigDecimal pricePerNight, Integer nights) {
         this.code = code;
         this.reservation = reservation;

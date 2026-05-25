@@ -1,13 +1,12 @@
 package com.hotel.booking.api.domain.reservation.service;
 
+import com.hotel.booking.api.domain.auth.model.entity.User;
 import com.hotel.booking.api.domain.auth.service.AuthService;
 import com.hotel.booking.api.domain.person.model.entity.Customer;
 import com.hotel.booking.api.domain.person.service.CustomerService;
 import com.hotel.booking.api.domain.reservation.component.ReservationMapper;
-import com.hotel.booking.api.domain.reservation.exception.ReservationNotFoundException;
+import com.hotel.booking.api.domain.reservation.exception.reservation.ReservationNotFoundException;
 import com.hotel.booking.api.domain.reservation.model.entity.Reservation;
-import com.hotel.booking.api.domain.reservation.model.entity.ReservationRoom;
-import com.hotel.booking.api.domain.reservation.model.enums.ReservationStatus;
 import com.hotel.booking.api.domain.reservation.repository.ReservationRepository;
 import com.hotel.booking.api.domain.reservation.web.request.CreateReservationRequest;
 import com.hotel.booking.api.domain.reservation.web.response.ReservationResponse;
@@ -25,77 +24,63 @@ public class ReservationService {
 
     public static final String PREFIX = "RSV";
     private final ReservationRepository repository;
-    private final CustomerService customerService;
     private final ReservationMapper mapper;
 
     private final AuthService authService;
+    private final CustomerService customerService;
     private final ReservationRoomService reservationRoomService;
 
     @Transactional(readOnly = true)
     public Page<ReservationResponse> findAll(Pageable pageable) {
-        return repository.findAll(pageable).map(mapper::toResponse);
+        Page<Reservation> page = repository.findAll(pageable);
+        return page.map(mapper::toResponse);
     }
 
-    @Transactional
-    public ReservationRoomResponse findDetailByCode(String code) {
+    @Transactional(readOnly = true)
+    public ReservationRoomResponse findDetail(String code) {
         Reservation reservation = findByCodeOrThrow(code);
         return reservationRoomService.findByReservation(reservation);
     }
 
     @Transactional
-    public ReservationResponse create(CreateReservationRequest request){
+    public ReservationResponse create(CreateReservationRequest request) {
         Customer customer = customerService.findByCodeOrThrow(request.customerCode());
-
-        Reservation reservation = new Reservation(
-                CodeGenerator.next(PREFIX),
-                customer,
-                authService.getAuthenticatedUser()
-        );
+        String code = CodeGenerator.next(PREFIX);
+        User user = authService.getAuthenticatedUser();
+        Reservation reservation = new Reservation(code, customer, user);
         Reservation saved = repository.save(reservation);
-        reservationRoomService.create(
-                saved,
-                request.room()
-        );
+        reservationRoomService.create(saved, request.room());
         return mapper.toResponse(saved);
     }
 
     @Transactional
-    public ReservationResponse defineCheckIn(String code){
+    public ReservationResponse checkIn(String code) {
         Reservation reservation = findByCodeOrThrow(code);
-        reservation.updateStatus(ReservationStatus.ACTIVE);
-        validateStatus(reservation);
-        reservation.defineCheckIn();
+        reservation.checkIn();
+        reservationRoomService.occupy(reservation);
         return mapper.toResponse(reservation);
     }
 
     @Transactional
-    public ReservationResponse defineCheckOut(String code){
+    public ReservationResponse checkOut(String code) {
         Reservation reservation = findByCodeOrThrow(code);
-        validateStatus(reservation);
-        reservation.updateStatus(ReservationStatus.DONE);
-        reservation.defineCheckOut();
+        reservation.checkOut();
         reservationRoomService.done(reservation);
         return mapper.toResponse(reservation);
     }
 
     @Transactional
-    public ReservationResponse cancel(String code){
+    public ReservationResponse cancel(String code) {
         Reservation reservation = findByCodeOrThrow(code);
-        reservation.updateStatus(ReservationStatus.CANCELLED);
+        reservation.cancel();
         reservationRoomService.cancel(reservation);
         return mapper.toResponse(reservation);
     }
 
-    public Reservation findByCodeOrThrow(String code){
+    public Reservation findByCodeOrThrow(String code) {
         return repository.findById(code).orElseThrow(
                 () -> new ReservationNotFoundException(code)
         );
-    }
-
-    public void validateStatus(Reservation reservation){
-        if (reservation.getStatus() == ReservationStatus.CANCELLED){
-            throw new ReservationNotFoundException(reservation.getCode());
-        }
     }
 
 }

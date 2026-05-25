@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 
 public enum PersonErrorCode implements ErrorCode {
 
-    NOT_FOUND(HttpStatus.NOT_FOUND);
+    PERSON_NOT_FOUND(HttpStatus.NOT_FOUND);
 
     private final HttpStatus httpStatus;
 

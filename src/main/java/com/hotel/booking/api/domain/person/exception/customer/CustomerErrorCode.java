@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 
 public enum CustomerErrorCode implements ErrorCode {
 
-    NOT_FOUND(HttpStatus.NOT_FOUND);
+    CUSTOMER_NOT_FOUND(HttpStatus.NOT_FOUND);
 
     private final HttpStatus httpStatus;
 

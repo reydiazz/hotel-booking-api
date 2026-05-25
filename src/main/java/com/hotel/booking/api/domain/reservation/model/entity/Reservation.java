@@ -2,6 +2,7 @@ package com.hotel.booking.api.domain.reservation.model.entity;
 
 import com.hotel.booking.api.domain.auth.model.entity.User;
 import com.hotel.booking.api.domain.person.model.entity.Customer;
+import com.hotel.booking.api.domain.reservation.exception.reservation.*;
 import com.hotel.booking.api.domain.reservation.model.enums.ReservationStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -45,7 +46,7 @@ public class Reservation {
     @Column(insertable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    public Reservation(String code, Customer customer, User user){
+    public Reservation(String code, Customer customer, User user) {
         this.code = code;
         this.customer = customer;
         this.user = user;
@@ -54,20 +55,62 @@ public class Reservation {
         this.totalAmount = BigDecimal.ZERO;
     }
 
-    public void defineCheckIn(){
+    public void checkIn() {
+        ensureCanCheckIn();
+        this.status = ReservationStatus.ACTIVE;
         this.checkIn = LocalDateTime.now();
     }
 
-    public void defineCheckOut(){
+    public void checkOut() {
+        ensureCanCheckOut();
+        this.status = ReservationStatus.DONE;
         this.checkOut = LocalDateTime.now();
     }
 
-    public void addToTotalAmount(BigDecimal amount) {
-        this.totalAmount = this.totalAmount.add(amount);
+    public void cancel() {
+        ensureCanCancel();
+        this.status = ReservationStatus.CANCELLED;
     }
 
-    public void updateStatus(ReservationStatus status){
-        this.status = status;
+    public void defineTotalAmount(BigDecimal pricePerNight, Integer nights) {
+        this.totalAmount = pricePerNight.multiply(BigDecimal.valueOf(nights));
+    }
+
+    public void validatePayment(BigDecimal paid, BigDecimal amount) {
+        ensureCanPay();
+        BigDecimal remaining = this.totalAmount.subtract(paid);
+        if (amount.compareTo(remaining) > 0) {
+            throw new ReservationPaymentExceedsBalanceException();
+        }
+    }
+
+    private void ensureCanCheckIn() {
+        switch (this.status) {
+            case CANCELLED -> throw new ReservationCancelledException("Reservation %s is cancelled and cannot perform check-in".formatted(this.code));
+            case ACTIVE -> throw new ReservationAlreadyCheckedInException(this.code);
+            case DONE -> throw new ReservationCompletedException(this.code);
+        }
+    }
+
+    private void ensureCanCheckOut() {
+        switch (this.status) {
+            case CANCELLED -> throw new ReservationCancelledException("Reservation %s is cancelled and cannot perform check-out".formatted(this.code));
+            case PENDING -> throw new ReservationCheckInRequiredException(this.code);
+            case DONE -> throw new ReservationCompletedException(this.code);
+        }
+    }
+
+    private void ensureCanCancel() {
+        switch (this.status) {
+            case CANCELLED -> throw new ReservationCancelledException("Reservation %s is already cancelled".formatted(this.code));
+            case DONE -> throw new ReservationCompletedException(this.code);
+        }
+    }
+
+    private void ensureCanPay() {
+        if (this.status == ReservationStatus.CANCELLED) {
+            throw new ReservationCancelledException("Reservation %s is cancelled and cannot receive payments".formatted(this.code));
+        }
     }
 
 }

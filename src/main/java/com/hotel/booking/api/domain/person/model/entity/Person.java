@@ -47,4 +47,8 @@ public class Person {
         this.birthDate = birthDate;
     }
 
+    public String getFullName() {
+        return this.firstName + " " + this.lastName;
+    }
+
 }

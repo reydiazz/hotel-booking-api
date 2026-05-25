@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 public enum AuthErrorCode implements ErrorCode {
 
     AUTHENTICATED_PRINCIPAL_NOT_FOUND(HttpStatus.NOT_FOUND),
-    AUTHENTICATED_USER(HttpStatus.BAD_REQUEST);
+    NO_AUTHENTICATED_USER(HttpStatus.BAD_REQUEST);
 
     private final HttpStatus httpStatus;
 

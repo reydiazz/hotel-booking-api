@@ -10,7 +10,6 @@ public class RoomTypeMapper {
     public RoomTypeResponse toResponse(RoomType type) {
         return new RoomTypeResponse(
                 type.getCode(),
-                type.getHotel().getCode(),
                 type.getName(),
                 type.getDescription(),
                 type.getCapacity(),

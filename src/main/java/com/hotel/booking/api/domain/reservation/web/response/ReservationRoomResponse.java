@@ -7,6 +7,7 @@ public record ReservationRoomResponse(
         Integer number,
         Integer floor,
         String typeName,
-        BigDecimal pricePerNight
+        BigDecimal pricePerNight,
+        Integer nights
 ) {
 }

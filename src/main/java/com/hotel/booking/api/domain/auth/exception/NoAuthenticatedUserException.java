@@ -5,7 +5,7 @@ import com.hotel.booking.api.shared.exception.BusinessException;
 public class NoAuthenticatedUserException extends BusinessException {
 
     public NoAuthenticatedUserException() {
-        super("No authenticated user found in security context", AuthErrorCode.AUTHENTICATED_USER);
+        super("No authenticated user found in security context", AuthErrorCode.NO_AUTHENTICATED_USER);
     }
 
 }

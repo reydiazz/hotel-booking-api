@@ -7,13 +7,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class AuthMapper {
 
-    public AuthResponse toResponse(User user){
+    public AuthResponse toResponse(User user) {
         return new AuthResponse(
                 user.getCode(),
                 user.getUsername(),
-                user.getEmployee().getPerson().getFirstName(),
-                user.getEmployee().getPerson().getLastName(),
+                user.getPerson().getFirstName(),
+                user.getPerson().getLastName(),
                 user.getRole()
         );
     }
+
 }

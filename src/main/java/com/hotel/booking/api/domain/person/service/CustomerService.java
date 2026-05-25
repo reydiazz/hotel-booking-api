@@ -27,21 +27,15 @@ public class CustomerService {
 
     @Transactional(readOnly = true)
     public Page<CustomerResponse> findAll(Pageable pageable) {
-        return repository.findAll(pageable).map(mapper::toResponse);
+        Page<Customer> page = repository.findAll(pageable);
+        return page.map(mapper::toResponse);
     }
 
     @Transactional
     public CustomerResponse create(CreateCustomerRequest request) {
         String code = CodeGenerator.next((PREFIX));
-        Person person = personService.create(
-                request.person()
-        );
-        Customer customer = new Customer(
-                code,
-                person,
-                request.documentType(),
-                request.documentNumber()
-        );
+        Person person = personService.create(request.person());
+        Customer customer = new Customer(code, person, request.documentType(), request.documentNumber());
         Customer saved = repository.save(customer);
         return mapper.toResponse(saved);
     }
@@ -49,26 +43,16 @@ public class CustomerService {
     @Transactional
     public CustomerResponse update(String code, UpdateCustomerRequest request) {
         Customer customer = findByCodeOrThrow(code);
-        Person person = personService.update(
-                customer.getPerson().getCode(),
-                request.person()
-        );
-        customer.update(
-                person,
-                request.documentType(),
-                request.documentNumber()
-        );
+        Person person = personService.update(customer.getPerson().getCode(), request.person());
+        customer.update(person, request.documentType(), request.documentNumber());
         return mapper.toResponse(customer);
-
     }
 
     @Transactional
     public void delete(String code) {
         Customer customer = findByCodeOrThrow(code);
         repository.delete(customer);
-        personService.delete(
-                customer.getPerson().getCode()
-        );
+        personService.delete(customer.getPerson().getCode());
     }
 
     public Customer findByCodeOrThrow(String code) {

@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 
 public record RoomResponse(
         String code,
-        String hotelCode,
         String roomTypeCode,
         String roomTypeName,
         Integer number,

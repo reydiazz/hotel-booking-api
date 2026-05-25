@@ -1,14 +1,14 @@
 package com.hotel.booking.api.domain.auth.model.entity;
 
-import com.hotel.booking.api.domain.person.model.entity.Employee;
 import com.hotel.booking.api.domain.auth.model.enums.Role;
+import com.hotel.booking.api.domain.person.model.entity.Person;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Entity
-@Table(name = "app_users")
+@Table(name = "users")
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class User {
@@ -18,8 +18,8 @@ public class User {
     private String code;
 
     @OneToOne
-    @JoinColumn(name = "employee_code", unique = true)
-    private Employee employee;
+    @JoinColumn(name = "person_code", unique = true)
+    private Person person;
 
     @Column(name = "username", unique = true, nullable = false)
     private String username;
@@ -34,17 +34,17 @@ public class User {
     @Column(name = "role", nullable = false)
     private Role role;
 
-    public User(String code, String username, String password, Role role, Employee employee) {
+    public User(String code, String username, String password, Role role, Person person) {
         this.code = code;
         this.username = username;
         this.password = password;
         this.role = role;
-        this.employee = employee;
+        this.person = person;
     }
 
-    public void update(Boolean active, Employee employee) {
+    public void update(Boolean active, Person person) {
         this.active = active;
-        this.employee = employee;
+        this.person = person;
     }
 
 }

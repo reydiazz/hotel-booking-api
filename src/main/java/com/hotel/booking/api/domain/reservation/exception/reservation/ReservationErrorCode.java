@@ -1,12 +1,17 @@
-package com.hotel.booking.api.domain.reservation.exception;
+package com.hotel.booking.api.domain.reservation.exception.reservation;
 
 import com.hotel.booking.api.shared.exception.ErrorCode;
 import org.springframework.http.HttpStatus;
 
 public enum ReservationErrorCode implements ErrorCode {
 
-    NOT_FOUND(HttpStatus.NOT_FOUND),
-    RESERVATION_CANCELLED(HttpStatus.CONFLICT);
+    RESERVATION_NOT_FOUND(HttpStatus.NOT_FOUND),
+    RESERVATION_CANCELLED(HttpStatus.CONFLICT),
+    RESERVATION_ALREADY_CHECKED_IN(HttpStatus.CONFLICT),
+    RESERVATION_ALREADY_CHECKED_OUT(HttpStatus.CONFLICT),
+    RESERVATION_ALREADY_COMPLETED(HttpStatus.CONFLICT),
+    RESERVATION_CHECKED_IN_REQUIRED(HttpStatus.CONFLICT),
+    RESERVATION_PAYMENT_EXCEEDED(HttpStatus.CONFLICT);
 
     private final HttpStatus httpStatus;
 

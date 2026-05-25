@@ -1,8 +1,8 @@
 package com.hotel.booking.api.domain.reservation.service;
 
+import com.hotel.booking.api.domain.auth.model.entity.User;
 import com.hotel.booking.api.domain.auth.service.AuthService;
 import com.hotel.booking.api.domain.reservation.component.PaymentMapper;
-import com.hotel.booking.api.domain.reservation.exception.PaymentExceedsRemainingBalanceException;
 import com.hotel.booking.api.domain.reservation.model.entity.Payment;
 import com.hotel.booking.api.domain.reservation.model.entity.Reservation;
 import com.hotel.booking.api.domain.reservation.model.enums.PaymentStatus;
@@ -31,26 +31,12 @@ public class PaymentService {
     public PaymentResponse create(CreatePaymentRequest request) {
         Reservation reservation = reservationService.findByCodeOrThrow(request.reservationCode());
         String code = CodeGenerator.next(PREFIX);
-        reservationService.validateStatus(reservation);
-        verifyPaid(reservation,request.amount());
-        Payment payment = new Payment(
-                code,
-                authService.getAuthenticatedUser(),
-                reservation,
-                request.method(),
-                PaymentStatus.PAID,
-                request.amount()
-        );
+        User user = authService.getAuthenticatedUser();
+        BigDecimal paid = repository.sumPaidPayments(reservation);
+        reservation.validatePayment(paid, request.amount());
+        Payment payment = new Payment(code, user, reservation, request.method(), PaymentStatus.PAID, request.amount());
         Payment saved = repository.save(payment);
         return mapper.toResponse(saved);
-    }
-
-    private void verifyPaid(Reservation reservation, BigDecimal amount){
-        BigDecimal paid = repository.sumPaidPayments(reservation.getCode());
-        BigDecimal remaining = reservation.getTotalAmount().subtract(paid);
-        if (amount.compareTo(remaining) > 0) {
-            throw new PaymentExceedsRemainingBalanceException();
-        }
     }
 
 }

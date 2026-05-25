@@ -16,10 +16,11 @@ public class CustomUserDetailsService implements UserDetailsService {
     private static final String USER_NOT_FOUND = "User not found with username: ";
 
     @Override
-    public UserDetails loadUserByUsername(String username){
+    public UserDetails loadUserByUsername(String username) {
         User user = repository.findByUsername(username).orElseThrow(
-                ()-> new UsernameNotFoundException(USER_NOT_FOUND + username)
+                () -> new UsernameNotFoundException(USER_NOT_FOUND + username)
         );
         return new UserPrincipal(user);
     }
+
 }
