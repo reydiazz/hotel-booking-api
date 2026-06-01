@@ -1,11 +1,10 @@
 package com.hotel.booking.api.domain.auth.service;
 
-import com.hotel.booking.api.domain.auth.exception.UserNotFoundException;
-import com.hotel.booking.api.domain.auth.exception.UsernameAlreadyExistsException;
+import com.hotel.booking.api.domain.auth.exception.user.UserNotFoundException;
+import com.hotel.booking.api.domain.auth.exception.user.UsernameAlreadyExistsException;
 import com.hotel.booking.api.domain.auth.model.entity.User;
 import com.hotel.booking.api.domain.auth.repository.UserRepository;
 import com.hotel.booking.api.domain.auth.web.request.CreateUserRequest;
-import com.hotel.booking.api.domain.hotel.exception.room.RoomNumberAlreadyExistsException;
 import com.hotel.booking.api.domain.person.model.entity.Person;
 import com.hotel.booking.api.domain.person.service.PersonService;
 import com.hotel.booking.api.shared.utils.CodeGenerator;
@@ -34,13 +33,7 @@ public class UserService {
         verifyUsername(request.username());
         String code = CodeGenerator.next(PREFIX);
         Person person = personService.create(request.person());
-        User user = new User(
-                code,
-                request.username(),
-                request.password(),
-                request.role(),
-                person
-        );
+        User user = new User(code, request.username(), request.password(), request.role(), person);
         return repository.save(user);
     }
 

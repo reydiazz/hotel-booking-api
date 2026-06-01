@@ -21,54 +21,50 @@ import org.springframework.transaction.annotation.Transactional;
 public class RoomService {
 
     public static final String PREFIX = "ROM";
-    private final RoomMapper mapper;
     private final RoomRepository repository;
 
     private final RoomTypeService typeService;
 
     @Transactional(readOnly = true)
-    public Page<RoomResponse> findAll(Pageable pageable) {
-        Page<Room> page = repository.findAll(pageable);
-        return page.map(mapper::toResponse);
+    public Page<Room> findAll(Pageable pageable) {
+        return repository.findAll(pageable);
     }
 
     @Transactional(readOnly = true)
-    public RoomResponse findByCode(String code) {
-        Room room = findByCodeOrThrow(code);
-        return mapper.toResponse(room);
+    public Room findByCode(String code) {
+        return findByCodeOrThrow(code);
     }
 
     @Transactional
-    public RoomResponse create(CreateRoomRequest request) {
+    public Room create(CreateRoomRequest request) {
         verifyNumber(request.number());
         String code = CodeGenerator.next(PREFIX);
         RoomType type = typeService.findByCodeOrThrow(request.typeCode());
         Room room = new Room(code, type, request.number(), request.floor());
-        Room saved = repository.save(room);
-        return mapper.toResponse(saved);
+        return repository.save(room);
     }
 
     @Transactional
-    public RoomResponse update(String code, UpdateRoomRequest request) {
+    public Room update(String code, UpdateRoomRequest request) {
         verifyNumber(request.number(), code);
         Room room = findByCodeOrThrow(code);
         RoomType type = typeService.findByCodeOrThrow(request.typeCode());
         room.update(type, request.number(), request.floor());
-        return mapper.toResponse(room);
+        return room;
     }
 
     @Transactional
-    public RoomResponse clean(String code) {
+    public Room clean(String code) {
         Room room = findByCodeOrThrow(code);
         room.clean();
-        return mapper.toResponse(room);
+        return room;
     }
 
     @Transactional
-    public RoomResponse markOutOfService(String code) {
+    public Room markOutOfService(String code) {
         Room room = findByCodeOrThrow(code);
         room.sendOutOfService();
-        return mapper.toResponse(room);
+        return room;
     }
 
     @Transactional

@@ -1,5 +1,7 @@
 package com.hotel.booking.api.domain.reservation.web.controller;
 
+import com.hotel.booking.api.domain.reservation.component.PaymentMapper;
+import com.hotel.booking.api.domain.reservation.model.entity.Payment;
 import com.hotel.booking.api.domain.reservation.service.PaymentService;
 import com.hotel.booking.api.domain.reservation.web.request.CreatePaymentRequest;
 import com.hotel.booking.api.domain.reservation.web.response.PaymentResponse;
@@ -18,11 +20,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class PaymentController {
 
     private final PaymentService service;
+    private final PaymentMapper mapper;
 
     @PostMapping
     public ResponseEntity<PaymentResponse> create(CreatePaymentRequest request) {
-        PaymentResponse response = service.create(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        Payment payment = service.create(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(mapper.toResponse(payment));
     }
 
 }

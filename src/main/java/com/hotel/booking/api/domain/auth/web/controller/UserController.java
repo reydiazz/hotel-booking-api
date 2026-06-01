@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService service;
-    private final UserMapper  mapper;
+    private final UserMapper mapper;
 
     @GetMapping
     public ResponseEntity<Page<UserResponse>> findAll(Pageable pageable) {

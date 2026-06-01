@@ -1,12 +1,10 @@
 package com.hotel.booking.api.domain.hotel.service;
 
 import com.hotel.booking.api.domain.hotel.exception.roomtype.RoomTypeNotFoundException;
-import com.hotel.booking.api.domain.hotel.component.RoomTypeMapper;
 import com.hotel.booking.api.domain.hotel.model.entity.RoomType;
 import com.hotel.booking.api.domain.hotel.repository.RoomTypeRepository;
 import com.hotel.booking.api.domain.hotel.web.request.CreateRoomTypeRequest;
 import com.hotel.booking.api.domain.hotel.web.request.UpdateRoomTypeRequest;
-import com.hotel.booking.api.domain.hotel.web.response.RoomTypeResponse;
 import com.hotel.booking.api.shared.utils.CodeGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,27 +18,24 @@ public class RoomTypeService {
 
     public final static String PREFIX = "RTE";
     private final RoomTypeRepository repository;
-    private final RoomTypeMapper mapper;
 
     @Transactional(readOnly = true)
-    public Page<RoomTypeResponse> findAll(Pageable pageable) {
-        Page<RoomType> page = repository.findAll(pageable);
-        return page.map(mapper::toResponse);
+    public Page<RoomType> findAll(Pageable pageable) {
+        return repository.findAll(pageable);
     }
 
     @Transactional
-    public RoomTypeResponse create(CreateRoomTypeRequest request) {
+    public RoomType create(CreateRoomTypeRequest request) {
         String code = CodeGenerator.next(PREFIX);
         RoomType type = new RoomType(code, request.name(), request.description(), request.capacity(), request.basePrice());
-        RoomType saved = repository.save(type);
-        return mapper.toResponse(saved);
+        return repository.save(type);
     }
 
     @Transactional
-    public RoomTypeResponse update(String code, UpdateRoomTypeRequest request) {
+    public RoomType update(String code, UpdateRoomTypeRequest request) {
         RoomType type = findByCodeOrThrow(code);
         type.update(request.name(), request.description(), request.capacity(), request.basePrice());
-        return mapper.toResponse(type);
+        return type;
     }
 
     @Transactional

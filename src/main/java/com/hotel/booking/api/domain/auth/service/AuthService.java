@@ -1,8 +1,8 @@
 package com.hotel.booking.api.domain.auth.service;
 
 import com.hotel.booking.api.domain.auth.component.AuthMapper;
-import com.hotel.booking.api.domain.auth.exception.AuthenticatedPrincipalNotFoundException;
-import com.hotel.booking.api.domain.auth.exception.NoAuthenticatedUserException;
+import com.hotel.booking.api.domain.auth.exception.auth.AuthenticatedPrincipalNotFoundException;
+import com.hotel.booking.api.domain.auth.exception.auth.NoAuthenticatedUserException;
 import com.hotel.booking.api.domain.auth.web.request.LoginRequest;
 import com.hotel.booking.api.domain.auth.web.response.LoginResponse;
 import com.hotel.booking.api.domain.auth.model.entity.User;

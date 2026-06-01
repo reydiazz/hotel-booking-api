@@ -1,9 +1,10 @@
 package com.hotel.booking.api.domain.reservation.web.controller;
 
+import com.hotel.booking.api.domain.reservation.component.ReservationMapper;
+import com.hotel.booking.api.domain.reservation.model.entity.Reservation;
 import com.hotel.booking.api.domain.reservation.service.ReservationService;
 import com.hotel.booking.api.domain.reservation.web.request.CreateReservationRequest;
 import com.hotel.booking.api.domain.reservation.web.response.ReservationResponse;
-import com.hotel.booking.api.domain.reservation.web.response.ReservationRoomResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,41 +21,36 @@ import org.springframework.web.bind.annotation.*;
 public class ReservationController {
 
     private final ReservationService service;
+    private final ReservationMapper mapper;
 
     @GetMapping
     public ResponseEntity<Page<ReservationResponse>> findAll(Pageable pageable) {
-        Page<ReservationResponse> response =  service.findAll(pageable);
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/detail/{code}")
-    public ResponseEntity<ReservationRoomResponse> findDetail(@PathVariable String code){
-        ReservationRoomResponse response = service.findDetail(code);
-        return ResponseEntity.ok(response);
+        Page<Reservation> page =  service.findAll(pageable);
+        return ResponseEntity.ok(page.map(mapper::toResponse));
     }
 
     @PostMapping
     public ResponseEntity<ReservationResponse> create(@RequestBody @Valid CreateReservationRequest request){
-        ReservationResponse response = service.create(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        Reservation reservation = service.create(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(mapper.toResponse(reservation));
     }
 
     @PatchMapping("/checkIn/{code}")
     public ResponseEntity<ReservationResponse> defineCheckIn(@PathVariable String code){
-        ReservationResponse response = service.checkIn(code);
-        return ResponseEntity.ok(response);
+        Reservation reservation = service.checkIn(code);
+        return ResponseEntity.ok(mapper.toResponse(reservation));
     }
 
     @PatchMapping("/checkOut/{code}")
     public ResponseEntity<ReservationResponse> defineCheckOut(@PathVariable String code){
-        ReservationResponse response = service.checkOut(code);
-        return ResponseEntity.ok(response);
+        Reservation reservation = service.checkOut(code);
+        return ResponseEntity.ok(mapper.toResponse(reservation));
     }
 
     @PatchMapping("/cancel/{code}")
     public ResponseEntity<ReservationResponse> cancel(@PathVariable String code){
-        ReservationResponse response = service.cancel(code);
-        return ResponseEntity.ok(response);
+        Reservation reservation = service.cancel(code);
+        return ResponseEntity.ok(mapper.toResponse(reservation));
     }
 
 }

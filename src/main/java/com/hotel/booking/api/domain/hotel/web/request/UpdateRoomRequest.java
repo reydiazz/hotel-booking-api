@@ -14,6 +14,5 @@ public record UpdateRoomRequest(
         @NotNull(message = "Room floor is required")
         @PositiveOrZero(message = "Floor must be greater than or equal to zero")
         Integer floor
-
 ) {
 }

@@ -10,11 +10,11 @@ import java.math.BigDecimal;
 public interface PaymentRepository extends JpaRepository<Payment, String> {
 
     @Query("""
-        SELECT COALESCE(SUM(p.amount), 0)
-        FROM Payment p
-        WHERE p.reservation = :reservation
-        AND p.status = 'PAID'
-       """)
+             SELECT COALESCE(SUM(p.amount), 0)
+             FROM Payment p
+             WHERE p.reservation = :reservation
+             AND p.status = 'PAID'
+            """)
     BigDecimal sumPaidPayments(Reservation reservation);
 
 }

@@ -11,7 +11,6 @@ public enum PersonErrorCode implements ErrorCode {
 
     PersonErrorCode(HttpStatus httpStatus) {
         this.httpStatus = httpStatus;
-
     }
 
     @Override

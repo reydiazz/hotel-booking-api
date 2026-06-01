@@ -11,7 +11,6 @@ public enum CustomerErrorCode implements ErrorCode {
 
     CustomerErrorCode(HttpStatus httpStatus) {
         this.httpStatus = httpStatus;
-
     }
 
     @Override

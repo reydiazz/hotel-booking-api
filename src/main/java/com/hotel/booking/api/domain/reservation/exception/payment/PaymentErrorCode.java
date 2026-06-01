@@ -11,7 +11,6 @@ public enum PaymentErrorCode implements ErrorCode {
 
     PaymentErrorCode(HttpStatus httpStatus) {
         this.httpStatus = httpStatus;
-
     }
 
     @Override

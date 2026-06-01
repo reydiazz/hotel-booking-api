@@ -1,4 +1,4 @@
-package com.hotel.booking.api.domain.auth.exception;
+package com.hotel.booking.api.domain.auth.exception.user;
 
 import com.hotel.booking.api.shared.exception.BusinessException;
 

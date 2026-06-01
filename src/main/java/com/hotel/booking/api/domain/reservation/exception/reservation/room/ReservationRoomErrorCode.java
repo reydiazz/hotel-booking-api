@@ -1,17 +1,17 @@
-package com.hotel.booking.api.domain.auth.exception;
+package com.hotel.booking.api.domain.reservation.exception.reservation.room;
 
 import com.hotel.booking.api.shared.exception.ErrorCode;
 import org.springframework.http.HttpStatus;
 
-public enum UserErrorCode implements ErrorCode {
+public enum ReservationRoomErrorCode implements ErrorCode {
 
-    USER_NOT_FOUND(HttpStatus.NOT_FOUND),
-    USER_ALREADY_EXISTS(HttpStatus.CONFLICT);
+    RESERVATION_ROOM_NOT_FOUND(HttpStatus.NOT_FOUND);
 
     private final HttpStatus httpStatus;
 
-    UserErrorCode(HttpStatus httpStatus) {
+    ReservationRoomErrorCode(HttpStatus httpStatus) {
         this.httpStatus = httpStatus;
+
     }
 
     @Override

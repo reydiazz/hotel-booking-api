@@ -1,5 +1,7 @@
 package com.hotel.booking.api.domain.hotel.web.controller;
 
+import com.hotel.booking.api.domain.hotel.component.RoomTypeMapper;
+import com.hotel.booking.api.domain.hotel.model.entity.RoomType;
 import com.hotel.booking.api.domain.hotel.service.RoomTypeService;
 import com.hotel.booking.api.domain.hotel.web.request.CreateRoomTypeRequest;
 import com.hotel.booking.api.domain.hotel.web.request.UpdateRoomTypeRequest;
@@ -15,32 +17,36 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@PreAuthorize("hasAnyRole('ADMIN','RECEPTION')")
 @RequestMapping("/api/room-types")
 public class RoomTypeController {
 
     private final RoomTypeService service;
+    private final RoomTypeMapper mapper;
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'RECEPTION')")
     public ResponseEntity<Page<RoomTypeResponse>> findAll(Pageable pageable) {
-        Page<RoomTypeResponse> response = service.findAll(pageable);
-        return ResponseEntity.ok(response);
+        Page<RoomType> page = service.findAll(pageable);
+        return ResponseEntity.ok(page.map(mapper::toResponse));
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<RoomTypeResponse> create(@RequestBody @Valid CreateRoomTypeRequest request) {
-        RoomTypeResponse response = service.create(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        RoomType type = service.create(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(mapper.toResponse(type));
     }
 
     @PutMapping("/{code}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<RoomTypeResponse> update(@PathVariable String code, @RequestBody @Valid UpdateRoomTypeRequest request) {
-        RoomTypeResponse response = service.update(code, request);
-        return ResponseEntity.ok(response);
+        RoomType type = service.update(code, request);
+        return ResponseEntity.ok(mapper.toResponse(type));
     }
 
     @DeleteMapping("/{code}")
-    public ResponseEntity<RoomTypeResponse> delete(@PathVariable String code) {
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public ResponseEntity<Void> delete(@PathVariable String code) {
         service.delete(code);
         return ResponseEntity.noContent().build();
     }

@@ -1,4 +1,4 @@
-package com.hotel.booking.api.domain.reservation.exception.reservationroom;
+package com.hotel.booking.api.domain.reservation.exception.reservation.room;
 
 import com.hotel.booking.api.shared.exception.BusinessException;
 

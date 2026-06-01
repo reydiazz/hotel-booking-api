@@ -6,7 +6,7 @@ public record CustomerResponse(
         String code,
         String fullName,
         String phone,
-        DocumentTypeCustomer documentType,
+        DocumentTypeCustomer document,
         String documentNumber
 ) {
 }
