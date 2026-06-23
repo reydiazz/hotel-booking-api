@@ -11,8 +11,7 @@ public class AuthMapper {
         return new AuthResponse(
                 user.getCode(),
                 user.getUsername(),
-                user.getPerson().getFirstName(),
-                user.getPerson().getLastName(),
+                user.getPerson().getFullName(),
                 user.getRole()
         );
     }

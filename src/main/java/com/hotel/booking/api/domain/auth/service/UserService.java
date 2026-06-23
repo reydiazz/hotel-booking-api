@@ -11,6 +11,7 @@ import com.hotel.booking.api.shared.utils.CodeGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,7 +34,8 @@ public class UserService {
         verifyUsername(request.username());
         String code = CodeGenerator.next(PREFIX);
         Person person = personService.create(request.person());
-        User user = new User(code, request.username(), request.password(), request.role(), person);
+        String passwordCode = new BCryptPasswordEncoder().encode(request.password());
+        User user = new User(code, request.username(), passwordCode, request.role(), person);
         return repository.save(user);
     }
 

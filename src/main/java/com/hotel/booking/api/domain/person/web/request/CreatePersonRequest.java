@@ -8,7 +8,7 @@ public record CreatePersonRequest(
         @NotBlank(message = "Person first name not be empty")
         String firstName,
         @NotBlank(message = "Person last name not be empty")
-        String lastname,
+        String lastName,
         String phone,
         LocalDate birthDate
 ) {

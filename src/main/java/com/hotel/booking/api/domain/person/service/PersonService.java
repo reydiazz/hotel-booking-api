@@ -20,7 +20,7 @@ public class PersonService {
     @Transactional
     public Person create(CreatePersonRequest request) {
         String code = CodeGenerator.next(PREFIX);
-        Person person = new Person(code, request.firstName(), request.lastname(), request.phone(), request.birthDate());
+        Person person = new Person(code, request.firstName(), request.lastName(), request.phone(), request.birthDate());
         return repository.save(person);
     }
 
