@@ -2,19 +2,23 @@ package com.hotel.booking.api.domain.auth.component;
 
 import com.hotel.booking.api.domain.auth.model.entity.User;
 import com.hotel.booking.api.domain.auth.web.response.UserResponse;
+import com.hotel.booking.api.domain.person.component.PersonMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class UserMapper {
+
+    private final PersonMapper personMapper;
 
     public UserResponse toResponse(User user) {
         return new UserResponse(
                 user.getCode(),
                 user.getUsername(),
                 user.getRole(),
-                user.getPerson().getFullName(),
-                user.getPerson().getPhone(),
-                user.isActive()
+                user.isActive(),
+                personMapper.toResponse(user.getPerson())
         );
     }
 

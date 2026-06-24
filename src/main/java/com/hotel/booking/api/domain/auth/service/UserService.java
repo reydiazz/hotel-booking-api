@@ -1,10 +1,12 @@
 package com.hotel.booking.api.domain.auth.service;
 
 import com.hotel.booking.api.domain.auth.exception.user.UserNotFoundException;
+import com.hotel.booking.api.domain.auth.exception.user.UserSelfDeactivationException;
 import com.hotel.booking.api.domain.auth.exception.user.UsernameAlreadyExistsException;
 import com.hotel.booking.api.domain.auth.model.entity.User;
 import com.hotel.booking.api.domain.auth.repository.UserRepository;
 import com.hotel.booking.api.domain.auth.web.request.CreateUserRequest;
+import com.hotel.booking.api.domain.auth.web.request.UpdateUserRequest;
 import com.hotel.booking.api.domain.person.model.entity.Person;
 import com.hotel.booking.api.domain.person.service.PersonService;
 import com.hotel.booking.api.shared.utils.CodeGenerator;
@@ -23,6 +25,7 @@ public class UserService {
     private final UserRepository repository;
 
     private final PersonService personService;
+    private final AuthService authService;
 
     @Transactional(readOnly = true)
     public Page<User> findAll(Pageable pageable) {
@@ -40,8 +43,17 @@ public class UserService {
     }
 
     @Transactional
+    public User update(String code, UpdateUserRequest request) {
+        User user = findByCodeOrThrow(code);
+        Person person = personService.update(user.getPerson().getCode(),request.person());
+        user.update(person,request.role());
+        return user;
+    }
+
+    @Transactional
     public User deactivate(String code) {
         User user = findByCodeOrThrow(code);
+        preventSelfDeactivation(user);
         user.deactivate();
         return user;
     }
@@ -53,6 +65,12 @@ public class UserService {
         return user;
     }
 
+    @Transactional
+    public void delete(String code) {
+        User user = findByCodeOrThrow(code);
+        repository.delete(user);
+    }
+
     public User findByCodeOrThrow(String code) {
         return repository.findById(code).orElseThrow(
                 () -> new UserNotFoundException(code)
@@ -62,6 +80,13 @@ public class UserService {
     private void verifyUsername(String username) {
         if (repository.existsByUsername(username)) {
             throw new UsernameAlreadyExistsException(username);
+        }
+    }
+
+    private void preventSelfDeactivation(User user) {
+        User current = authService.getAuthenticatedUser();
+        if (current.getCode().equals(user.getCode())) {
+            throw new UserSelfDeactivationException();
         }
     }
 

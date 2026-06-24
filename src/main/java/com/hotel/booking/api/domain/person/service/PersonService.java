@@ -27,7 +27,7 @@ public class PersonService {
     @Transactional
     public Person update(String code, UpdatePersonRequest request) {
         Person person = findByCodeOrThrow(code);
-        person.update(request.firstName(), request.lastname(), request.phone(), request.birthDate());
+        person.update(request.firstName(), request.lastName(), request.phone(), request.birthDate());
         return person;
     }
 

@@ -42,8 +42,8 @@ public class User {
         this.person = person;
     }
 
-    public void update(Boolean active, Person person) {
-        this.active = active;
+    public void update(Person person, Role role) {
+        this.role = role;
         this.person = person;
     }
 

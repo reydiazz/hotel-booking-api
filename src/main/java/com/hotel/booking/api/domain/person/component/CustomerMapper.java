@@ -9,10 +9,12 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class CustomerMapper {
 
+    private final PersonMapper personMapper;
+
     public CustomerResponse toResponse(Customer customer) {
         return new CustomerResponse(
                 customer.getCode(),
-                customer.getPerson().getFullName(),
+                personMapper.toResponse(customer.getPerson()),
                 customer.getPerson().getPhone(),
                 customer.getDocumentType(),
                 customer.getDocumentNumber()
