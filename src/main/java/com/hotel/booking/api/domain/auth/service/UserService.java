@@ -68,6 +68,7 @@ public class UserService {
     @Transactional
     public void delete(String code) {
         User user = findByCodeOrThrow(code);
+        preventSelfDeactivation(user);
         repository.delete(user);
         personService.delete(user.getPerson().getCode());
     }
