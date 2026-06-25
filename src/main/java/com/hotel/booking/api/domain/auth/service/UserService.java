@@ -69,6 +69,7 @@ public class UserService {
     public void delete(String code) {
         User user = findByCodeOrThrow(code);
         repository.delete(user);
+        personService.delete(user.getPerson().getCode());
     }
 
     public User findByCodeOrThrow(String code) {
