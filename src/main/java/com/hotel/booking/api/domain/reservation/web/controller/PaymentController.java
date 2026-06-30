@@ -5,11 +5,13 @@ import com.hotel.booking.api.domain.reservation.model.entity.Payment;
 import com.hotel.booking.api.domain.reservation.service.PaymentService;
 import com.hotel.booking.api.domain.reservation.web.request.CreatePaymentRequest;
 import com.hotel.booking.api.domain.reservation.web.response.PaymentResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,7 +25,7 @@ public class PaymentController {
     private final PaymentMapper mapper;
 
     @PostMapping
-    public ResponseEntity<PaymentResponse> create(CreatePaymentRequest request) {
+    public ResponseEntity<PaymentResponse> create(@RequestBody @Valid CreatePaymentRequest request) {
         Payment payment = service.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(mapper.toResponse(payment));
     }
