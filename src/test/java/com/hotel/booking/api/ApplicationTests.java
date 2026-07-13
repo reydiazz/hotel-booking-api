@@ -55,7 +55,6 @@ class ApplicationTests {
 				person);
 
 		userRepository.save(user);
-
 	}
 
 }

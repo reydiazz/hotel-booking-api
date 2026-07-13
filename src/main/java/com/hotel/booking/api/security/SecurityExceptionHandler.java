@@ -1,5 +1,6 @@
-package com.hotel.booking.api.shared.exception;
+package com.hotel.booking.api.security;
 
+import com.hotel.booking.api.shared.exception.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
 public class SecurityExceptionHandler {
 
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<ErrorResponse> badCredentials(BadCredentialsException exception) {
+    public ResponseEntity<ErrorResponse> handlerBadCredentials(BadCredentialsException exception) {
         ErrorResponse response = new ErrorResponse(
                 HttpStatus.UNAUTHORIZED.value(),
                 "BAD_CREDENTIALS",
@@ -24,7 +25,7 @@ public class SecurityExceptionHandler {
     }
 
     @ExceptionHandler(DisabledException.class)
-    public ResponseEntity<ErrorResponse> disabledException(DisabledException exception) {
+    public ResponseEntity<ErrorResponse> handlerDisabledException(DisabledException exception) {
         ErrorResponse response = new ErrorResponse(
                 HttpStatus.FORBIDDEN.value(),
                 "ACCOUNT_DISABLED",

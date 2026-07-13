@@ -3,6 +3,7 @@ package com.hotel.booking.api.domain.auth.service;
 import com.hotel.booking.api.domain.auth.exception.user.UserNotFoundException;
 import com.hotel.booking.api.domain.auth.exception.user.UserSelfDeactivationException;
 import com.hotel.booking.api.domain.auth.exception.user.UsernameAlreadyExistsException;
+import com.hotel.booking.api.domain.auth.exception.user.UsernameNotFoundException;
 import com.hotel.booking.api.domain.auth.model.entity.User;
 import com.hotel.booking.api.domain.auth.repository.UserRepository;
 import com.hotel.booking.api.domain.auth.web.request.CreateUserRequest;
@@ -71,6 +72,12 @@ public class UserService {
         preventSelfDeactivation(user);
         repository.delete(user);
         personService.delete(user.getPerson().getCode());
+    }
+
+    public User findByUsername(String username) {
+        return repository.findByUsername(username).orElseThrow(
+                () -> new UsernameNotFoundException(username)
+        );
     }
 
     public User findByCodeOrThrow(String code) {

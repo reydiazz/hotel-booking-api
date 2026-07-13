@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public class BusinessExceptionHandler {
 
     @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<ErrorResponse> handle(BusinessException exception) {
+    public ResponseEntity<ErrorResponse> handleBusiness(BusinessException exception) {
         ErrorResponse response = new ErrorResponse(
                 exception.getHttpStatus().value(),
                 exception.getCode(),

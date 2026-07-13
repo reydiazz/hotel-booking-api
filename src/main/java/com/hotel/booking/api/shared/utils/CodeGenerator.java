@@ -33,19 +33,13 @@ public final class CodeGenerator {
 
     private static void verifyPrefix(String prefix) {
         if (prefix == null) {
-            throw new IllegalArgumentException(
-                    "Prefix must not be null"
-            );
+            throw new IllegalArgumentException("Prefix must not be null");
         }
         if (prefix.isBlank()) {
-            throw new IllegalArgumentException(
-                    "Prefix must not be blank"
-            );
+            throw new IllegalArgumentException("Prefix must not be blank");
         }
         if (!prefix.matches(PREFIX_REGEX)) {
-            throw new IllegalArgumentException(
-                    "Prefix must contain only " + PREFIX_LENGTH + " uppercase letters"
-            );
+            throw new IllegalArgumentException("Prefix must contain only " + PREFIX_LENGTH + " uppercase letters");
         }
     }
 

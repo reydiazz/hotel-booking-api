@@ -6,7 +6,6 @@ import com.hotel.booking.api.domain.person.model.entity.Customer;
 import com.hotel.booking.api.domain.person.service.CustomerService;
 import com.hotel.booking.api.domain.reservation.exception.reservation.ReservationNotFoundException;
 import com.hotel.booking.api.domain.reservation.model.entity.Reservation;
-import com.hotel.booking.api.domain.reservation.model.entity.ReservationRoom;
 import com.hotel.booking.api.domain.reservation.repository.ReservationRepository;
 import com.hotel.booking.api.domain.reservation.web.request.CreateReservationRequest;
 import com.hotel.booking.api.shared.utils.CodeGenerator;

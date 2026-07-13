@@ -1,25 +1,22 @@
 package com.hotel.booking.api.security;
 
 import com.hotel.booking.api.domain.auth.model.entity.User;
-import com.hotel.booking.api.domain.auth.repository.UserRepository;
+import com.hotel.booking.api.domain.auth.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor_ = @__({@Lazy}))
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UserRepository repository;
-    private static final String USER_NOT_FOUND = "User not found with username: ";
+    private final UserService service;
 
     @Override
     public UserDetails loadUserByUsername(String username) {
-        User user = repository.findByUsername(username).orElseThrow(
-                () -> new UsernameNotFoundException(USER_NOT_FOUND + username)
-        );
+        User user = service.findByUsername(username);
         return new UserPrincipal(user);
     }
 

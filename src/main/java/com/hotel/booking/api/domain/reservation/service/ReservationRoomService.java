@@ -25,9 +25,9 @@ public class ReservationRoomService {
     public ReservationRoom create(Reservation reservation, CreateReservationRoomRequest request) {
         Room room = roomService.findByCodeOrThrow(request.roomCode());
         room.reserve();
-        reservation.defineTotalAmount(request.pricePerNight(), request.nights());
+        reservation.defineTotalAmount(room.getType().getBasePrice(), request.nights());
         String code = CodeGenerator.next(PREFIX);
-        ReservationRoom reservationRoom = new ReservationRoom(code, reservation, room, request.pricePerNight(), request.nights());
+        ReservationRoom reservationRoom = new ReservationRoom(code, reservation, room, room.getType().getBasePrice(), request.nights());
         return repository.save(reservationRoom);
     }
 

@@ -20,7 +20,7 @@ public class AuthService {
 
     private final AuthenticationManager manager;
     private final AuthMapper mapper;
-    private final JwtService jwtService;
+    private final JWTService jwtService;
 
     public LoginResponse login(LoginRequest request) {
         Authentication authentication = manager.authenticate(new UsernamePasswordAuthenticationToken(request.username(), request.password()));
