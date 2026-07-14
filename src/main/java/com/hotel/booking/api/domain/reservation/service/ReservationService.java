@@ -43,22 +43,22 @@ public class ReservationService {
         Reservation reservation = new Reservation(CodeGenerator.next(PREFIX_RESERVATION), customer, user);
         for (CreateReservationRoomRequest roomRequest : request.rooms()) {
             Room room = roomService.findByCodeOrThrow(roomRequest.roomCode());
-            reservation.addRoom(CodeGenerator.next(PREFIX_ROOM_RESERVATION), room, roomRequest.nights());
+            reservation.addRoom(CodeGenerator.next(PREFIX_ROOM_RESERVATION), room);
         }
         return repository.save(reservation);
     }
 
     @Transactional
-    public Reservation checkIn(String code) {
+    public Reservation checkIn(String code, String reservationRoomCode) {
         Reservation reservation = findByCodeOrThrow(code);
-        reservation.checkIn();
+        reservation.checkIn(reservationRoomCode);
         return reservation;
     }
 
     @Transactional
-    public Reservation checkOut(String code) {
+    public Reservation checkOut(String code, String reservationRoomCode) {
         Reservation reservation = findByCodeOrThrow(code);
-        reservation.checkOut();
+        reservation.checkOut(reservationRoomCode);
         return reservation;
     }
 

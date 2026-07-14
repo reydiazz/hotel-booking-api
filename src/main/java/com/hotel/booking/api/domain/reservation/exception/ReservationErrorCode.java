@@ -11,7 +11,7 @@ public enum ReservationErrorCode implements ErrorCode {
     RESERVATION_ALREADY_CHECKED_OUT(HttpStatus.CONFLICT),
     RESERVATION_ALREADY_COMPLETED(HttpStatus.CONFLICT),
     RESERVATION_CHECKED_IN_REQUIRED(HttpStatus.CONFLICT),
-    RESERVATION_PAYMENT_EXCEEDED(HttpStatus.CONFLICT);
+    RESERVATION_ROOM_NOT_FOUND(HttpStatus.NOT_FOUND);
 
     private final HttpStatus httpStatus;
 

@@ -17,6 +17,8 @@ public class ReservationRoomMapper {
                 reservationRoom.getRoom().getFloor(),
                 reservationRoom.getRoom().getType().getName(),
                 reservationRoom.getPricePerNight(),
+                reservationRoom.getCheckIn(),
+                reservationRoom.getCheckOut(),
                 reservationRoom.getNights()
         );
     }

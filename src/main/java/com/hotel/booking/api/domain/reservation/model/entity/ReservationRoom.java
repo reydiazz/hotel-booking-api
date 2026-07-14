@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @Entity
 @Table(name = "reservation_rooms")
@@ -29,15 +32,35 @@ public class ReservationRoom {
     @Column(name = "price_per_night", nullable = false)
     private BigDecimal pricePerNight;
 
-    @Column(name = "nights", nullable = false)
-    private Integer nights;
+    @Column(name = "check_in")
+    private LocalDateTime checkIn;
 
-    public ReservationRoom(String code, Reservation reservation, Room room, Integer nights) {
+    @Column(name = "check_out")
+    private LocalDateTime checkOut;
+
+    public ReservationRoom(String code, Reservation reservation, Room room) {
         this.code = code;
         this.reservation = reservation;
         this.room = room;
         this.pricePerNight = room.getType().getBasePrice();
-        this.nights = nights;
+    }
+
+    public void checkIn() {
+        this.room.occupy();
+        this.checkIn = LocalDateTime.now();
+    }
+
+    public void checkOut() {
+        this.room.markDirty();
+        this.checkOut = LocalDateTime.now();
+    }
+
+    public long getNights() {
+        if (checkIn == null) {
+            return 0;
+        }
+        LocalDate endDate = checkOut != null ? checkOut.toLocalDate() : LocalDate.now();
+        return ChronoUnit.DAYS.between(checkIn.toLocalDate(), endDate);
     }
 
 }

@@ -37,12 +37,6 @@ public class Reservation {
     @Column(name = "status", nullable = false)
     private ReservationStatus status = ReservationStatus.PENDING;
 
-    @Column(name = "check_in")
-    private LocalDateTime checkIn;
-
-    @Column(name = "check_out")
-    private LocalDateTime checkOut;
-
     @Column(name = "total_amount", nullable = false)
     private BigDecimal totalAmount;
 
@@ -59,25 +53,26 @@ public class Reservation {
         this.totalAmount = BigDecimal.ZERO;
     }
 
-    public void addRoom(String code, Room room, Integer nights) {
+    public void addRoom(String code, Room room) {
         room.reserve();
-        ReservationRoom reservationRoom = new ReservationRoom(code, this, room, nights);
+        ReservationRoom reservationRoom = new ReservationRoom(code, this, room);
         this.rooms.add(reservationRoom);
-        addToTotalAmount(room.getType().getBasePrice(), nights);
     }
 
-    public void checkIn() {
+    public void checkIn(String reservationRoomCode) {
         ensureCanCheckIn();
-        this.rooms.forEach(reservationRoom -> reservationRoom.getRoom().occupy());
+        ReservationRoom reservationRoom = findRoomByCode(reservationRoomCode);
+        reservationRoom.checkIn();
         this.status = ReservationStatus.ACTIVE;
-        this.checkIn = LocalDateTime.now();
     }
 
-    public void checkOut() {
+    public void checkOut(String reservationRoomCode) {
         ensureCanCheckOut();
-        this.rooms.forEach(reservationRoom -> reservationRoom.getRoom().markDirty());
-        this.status = ReservationStatus.DONE;
-        this.checkOut = LocalDateTime.now();
+        ReservationRoom reservationRoom = findRoomByCode(reservationRoomCode);
+        reservationRoom.checkOut();
+        if (allRoomsCheckedOut()) {
+            this.status = ReservationStatus.DONE;
+        }
     }
 
     public void cancel() {
@@ -86,24 +81,28 @@ public class Reservation {
         this.status = ReservationStatus.CANCELLED;
     }
 
-    private void addToTotalAmount(BigDecimal pricePerNight, Integer nights) {
-        BigDecimal subtotal = pricePerNight.multiply(BigDecimal.valueOf(nights));
-        this.totalAmount = this.totalAmount.add(subtotal);
+    private ReservationRoom findRoomByCode(String code) {
+        return this.rooms.stream()
+                .filter(room -> room.getCode().equals(code))
+                .findFirst()
+                .orElseThrow(() -> new ReservationRoomNotFoundException(code)
+        );
+    }
+
+    private boolean allRoomsCheckedOut() {
+        return this.rooms.stream().allMatch(room -> room.getCheckOut() != null);
     }
 
     private void ensureCanCheckIn() {
         switch (this.status) {
-            case CANCELLED ->
-                    throw new ReservationCancelledException("Reservation %s is cancelled and cannot perform check-in".formatted(this.code));
-            case ACTIVE -> throw new ReservationAlreadyCheckedInException(this.code);
+            case CANCELLED -> throw new ReservationCancelledException("Reservation %s is cancelled and cannot perform check-in".formatted(this.code));
             case DONE -> throw new ReservationCompletedException(this.code);
         }
     }
 
     private void ensureCanCheckOut() {
         switch (this.status) {
-            case CANCELLED ->
-                    throw new ReservationCancelledException("Reservation %s is cancelled and cannot perform check-out".formatted(this.code));
+            case CANCELLED -> throw new ReservationCancelledException("Reservation %s is cancelled and cannot perform check-out".formatted(this.code));
             case PENDING -> throw new ReservationCheckInRequiredException(this.code);
             case DONE -> throw new ReservationCompletedException(this.code);
         }
@@ -111,9 +110,8 @@ public class Reservation {
 
     private void ensureCanCancel() {
         switch (this.status) {
-            case CANCELLED ->
-                    throw new ReservationCancelledException("Reservation %s is already cancelled".formatted(this.code));
-            case DONE -> throw new ReservationCompletedException(this.code);
+            case CANCELLED -> throw new ReservationCancelledException("Reservation %s is already cancelled".formatted(this.code));
+            case DONE ->throw new ReservationCompletedException(this.code);
         }
     }
 }
