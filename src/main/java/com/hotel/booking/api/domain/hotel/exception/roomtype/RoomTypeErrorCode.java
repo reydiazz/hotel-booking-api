@@ -5,7 +5,8 @@ import org.springframework.http.HttpStatus;
 
 public enum RoomTypeErrorCode implements ErrorCode {
 
-    NOT_FOUND(HttpStatus.NOT_FOUND);
+    ROOM_TYPE_NOT_FOUND(HttpStatus.NOT_FOUND),
+    NAME_ROOM_TYPE_DUPLICATED(HttpStatus.CONFLICT);
 
     private final HttpStatus httpStatus;
 

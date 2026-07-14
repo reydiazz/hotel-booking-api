@@ -13,7 +13,6 @@ public class RoomMapper {
         return new RoomResponse(
                 room.getCode(),
                 room.getType().getCode(),
-                room.getType().getName(),
                 room.getNumber(),
                 room.getFloor(),
                 room.getStatus(),

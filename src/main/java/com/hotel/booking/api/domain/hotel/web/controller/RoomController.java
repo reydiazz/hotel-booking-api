@@ -65,6 +65,13 @@ public class RoomController {
         return ResponseEntity.ok(mapper.toResponse(room));
     }
 
+    @PatchMapping("/{code}/release")
+    @PreAuthorize("hasAnyRole('ADMIN', 'RECEPTION')")
+    public ResponseEntity<RoomResponse> release(@PathVariable String code) {
+        Room room = service.release(code);
+        return ResponseEntity.ok(mapper.toResponse(room));
+    }
+
     @DeleteMapping("/{code}")
     @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable String code) {

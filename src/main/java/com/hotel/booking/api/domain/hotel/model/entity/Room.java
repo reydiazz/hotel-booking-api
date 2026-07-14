@@ -1,10 +1,7 @@
 package com.hotel.booking.api.domain.hotel.model.entity;
 
-import com.hotel.booking.api.domain.hotel.exception.room.RoomReservedException;
+import com.hotel.booking.api.domain.hotel.exception.room.*;
 import com.hotel.booking.api.domain.hotel.model.enums.RoomStatus;
-import com.hotel.booking.api.domain.hotel.exception.room.RoomDirtyException;
-import com.hotel.booking.api.domain.hotel.exception.room.RoomOccupiedException;
-import com.hotel.booking.api.domain.hotel.exception.room.RoomOutOfServiceException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -54,16 +51,27 @@ public class Room {
     }
 
     public void clean() {
+        if (this.status != RoomStatus.DIRTY) throw new RoomNotDirtyException();
         this.lastCleaned = LocalDateTime.now();
-        release();
+        markAvailable();
     }
 
-    public void release() {
+    public void markAvailable() {
         this.status = RoomStatus.AVAILABLE;
     }
 
+    public void sendOutOfService() {
+        if (this.status != RoomStatus.AVAILABLE) throw new RoomNotAvailableException();
+        this.status = RoomStatus.OUT_OF_SERVICE;
+    }
+
+    public void release() {
+        if (this.status != RoomStatus.OUT_OF_SERVICE) throw new RoomNotOutOfServiceException();
+        markAvailable();
+    }
+
     public void reserve() {
-        ensureAvailableForReservation();
+        if (this.status != RoomStatus.AVAILABLE) throw new RoomNotAvailableException();
         this.status = RoomStatus.RESERVED;
     }
 
@@ -72,20 +80,8 @@ public class Room {
     }
 
     public void occupy() {
+        if (this.status != RoomStatus.RESERVED) throw new RoomNotReservedException();
         this.status = RoomStatus.OCCUPIED;
-    }
-
-    public void sendOutOfService() {
-        this.status = RoomStatus.OUT_OF_SERVICE;
-    }
-
-    private void ensureAvailableForReservation() {
-        switch (this.status) {
-            case DIRTY -> throw new RoomDirtyException(this.code);
-            case RESERVED -> throw new RoomReservedException(this.code);
-            case OCCUPIED -> throw new RoomOccupiedException(this.code);
-            case OUT_OF_SERVICE -> throw new RoomOutOfServiceException(this.code);
-        }
     }
 
 }

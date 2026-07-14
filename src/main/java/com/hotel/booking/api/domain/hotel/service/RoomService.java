@@ -66,6 +66,13 @@ public class RoomService {
     }
 
     @Transactional
+    public Room release(String code) {
+        Room room = findByCodeOrThrow(code);
+        room.release();
+        return room;
+    }
+
+    @Transactional
     public void delete(String code) {
         Room room = findByCodeOrThrow(code);
         repository.delete(room);

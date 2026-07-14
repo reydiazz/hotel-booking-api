@@ -1,5 +1,6 @@
 package com.hotel.booking.api.domain.hotel.service;
 
+import com.hotel.booking.api.domain.hotel.exception.roomtype.DuplicateRoomTypeNameException;
 import com.hotel.booking.api.domain.hotel.exception.roomtype.RoomTypeNotFoundException;
 import com.hotel.booking.api.domain.hotel.model.entity.RoomType;
 import com.hotel.booking.api.domain.hotel.repository.RoomTypeRepository;
@@ -26,6 +27,7 @@ public class RoomTypeService {
 
     @Transactional
     public RoomType create(CreateRoomTypeRequest request) {
+        validateUniqueName(request.name());
         String code = CodeGenerator.next(PREFIX);
         RoomType type = new RoomType(code, request.name(), request.description(), request.capacity(), request.basePrice());
         return repository.save(type);
@@ -33,6 +35,7 @@ public class RoomTypeService {
 
     @Transactional
     public RoomType update(String code, UpdateRoomTypeRequest request) {
+        validateUniqueName(request.name(), code);
         RoomType type = findByCodeOrThrow(code);
         type.update(request.name(), request.description(), request.capacity(), request.basePrice());
         return type;
@@ -42,6 +45,18 @@ public class RoomTypeService {
     public void delete(String code) {
         RoomType type = findByCodeOrThrow(code);
         repository.delete(type);
+    }
+
+    private void validateUniqueName(String name) {
+        if (repository.existsByNameIgnoreCase(name)) {
+            throw new DuplicateRoomTypeNameException(name);
+        }
+    }
+
+    private void validateUniqueName(String name, String code) {
+        if (repository.existsByNameIgnoreCaseAndCodeNot(name, code)) {
+            throw new DuplicateRoomTypeNameException(name);
+        }
     }
 
     public RoomType findByCodeOrThrow(String code) {

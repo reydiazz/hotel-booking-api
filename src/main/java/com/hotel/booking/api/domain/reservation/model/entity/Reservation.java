@@ -82,7 +82,7 @@ public class Reservation {
 
     public void cancel() {
         ensureCanCancel();
-        this.rooms.forEach(reservationRoom -> reservationRoom.getRoom().release());
+        this.rooms.forEach(reservationRoom -> reservationRoom.getRoom().markAvailable());
         this.status = ReservationStatus.CANCELLED;
     }
 
