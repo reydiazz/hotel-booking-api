@@ -1,4 +1,4 @@
-package com.hotel.booking.api.domain.person.validation;
+package com.hotel.booking.api.domain.person.validation.adult;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;

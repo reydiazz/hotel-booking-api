@@ -1,4 +1,4 @@
-package com.hotel.booking.api.domain.person.validation;
+package com.hotel.booking.api.domain.person.validation.adult;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
@@ -21,6 +21,5 @@ public class AdultValidator implements ConstraintValidator<Adult, LocalDate> {
         }
         return !birthDate.plusYears(minimumAge).isAfter(LocalDate.now());
     }
-
 
 }

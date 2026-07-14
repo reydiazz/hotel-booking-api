@@ -1,6 +1,6 @@
 package com.hotel.booking.api.domain.person.web.request;
 
-import com.hotel.booking.api.domain.person.validation.Adult;
+import com.hotel.booking.api.domain.person.validation.adult.Adult;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
@@ -11,7 +11,7 @@ public record CreatePersonRequest(
         String firstName,
         @NotBlank(message = "Person last name not be empty")
         String lastName,
-        @Pattern(regexp = "^(?:\\+51)?9\\d{8}$", message = "The mobile format is not valid.")
+        @Pattern(regexp = "^\\+[1-9]\\d{7,14}$", message = "The phone number must include the country code")
         String phone,
         @Adult
         LocalDate birthDate
