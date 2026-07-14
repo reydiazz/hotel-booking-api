@@ -1,4 +1,4 @@
-package com.hotel.booking.api.domain.reservation.exception.reservation;
+package com.hotel.booking.api.domain.reservation.exception;
 
 import com.hotel.booking.api.shared.exception.ErrorCode;
 import org.springframework.http.HttpStatus;

@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ReservationMapper {
 
+    private final ReservationRoomMapper reservationRoomMapper;
+
     public ReservationResponse toResponse(Reservation reservation) {
         return new ReservationResponse(
                 reservation.getCode(),
@@ -19,7 +21,8 @@ public class ReservationMapper {
                 reservation.getStatus(),
                 reservation.getCheckIn(),
                 reservation.getCheckOut(),
-                reservation.getCreatedAt()
+                reservation.getCreatedAt(),
+                reservationRoomMapper.toResponseList(reservation.getRooms())
         );
     }
 

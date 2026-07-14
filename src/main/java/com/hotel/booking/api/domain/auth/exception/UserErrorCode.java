@@ -1,4 +1,4 @@
-package com.hotel.booking.api.domain.auth.exception.user;
+package com.hotel.booking.api.domain.auth.exception;
 
 import com.hotel.booking.api.shared.exception.ErrorCode;
 import org.springframework.http.HttpStatus;
@@ -8,7 +8,9 @@ public enum UserErrorCode implements ErrorCode {
     USER_NOT_FOUND(HttpStatus.NOT_FOUND),
     USERNAME_NOT_FOUND(HttpStatus.NOT_FOUND),
     USER_ALREADY_EXISTS(HttpStatus.CONFLICT),
-    USER_SELF_DEACTIVATION(HttpStatus.CONFLICT);
+    USER_SELF_DEACTIVATION(HttpStatus.CONFLICT),
+    USER_ALREADY_ACTIVE(HttpStatus.CONFLICT),
+    USER_ALREADY_DEACTIVATE(HttpStatus.CONFLICT);
 
     private final HttpStatus httpStatus;
 

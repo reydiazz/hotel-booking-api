@@ -1,9 +1,9 @@
 package com.hotel.booking.api.domain.auth.service;
 
-import com.hotel.booking.api.domain.auth.exception.user.UserNotFoundException;
-import com.hotel.booking.api.domain.auth.exception.user.UserSelfDeactivationException;
-import com.hotel.booking.api.domain.auth.exception.user.UsernameAlreadyExistsException;
-import com.hotel.booking.api.domain.auth.exception.user.UsernameNotFoundException;
+import com.hotel.booking.api.domain.auth.exception.UserNotFoundException;
+import com.hotel.booking.api.domain.auth.exception.UserSelfDeactivationException;
+import com.hotel.booking.api.domain.auth.exception.UsernameAlreadyExistsException;
+import com.hotel.booking.api.domain.auth.exception.UsernameNotFoundException;
 import com.hotel.booking.api.domain.auth.model.entity.User;
 import com.hotel.booking.api.domain.auth.repository.UserRepository;
 import com.hotel.booking.api.domain.auth.web.request.CreateUserRequest;

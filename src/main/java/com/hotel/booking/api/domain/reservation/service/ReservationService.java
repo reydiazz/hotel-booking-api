@@ -2,12 +2,15 @@ package com.hotel.booking.api.domain.reservation.service;
 
 import com.hotel.booking.api.domain.auth.model.entity.User;
 import com.hotel.booking.api.domain.auth.service.AuthService;
+import com.hotel.booking.api.domain.hotel.model.entity.Room;
+import com.hotel.booking.api.domain.hotel.service.RoomService;
 import com.hotel.booking.api.domain.person.model.entity.Customer;
 import com.hotel.booking.api.domain.person.service.CustomerService;
-import com.hotel.booking.api.domain.reservation.exception.reservation.ReservationNotFoundException;
+import com.hotel.booking.api.domain.reservation.exception.ReservationNotFoundException;
 import com.hotel.booking.api.domain.reservation.model.entity.Reservation;
 import com.hotel.booking.api.domain.reservation.repository.ReservationRepository;
 import com.hotel.booking.api.domain.reservation.web.request.CreateReservationRequest;
+import com.hotel.booking.api.domain.reservation.web.request.CreateReservationRoomRequest;
 import com.hotel.booking.api.shared.utils.CodeGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,12 +22,14 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ReservationService {
 
-    public static final String PREFIX = "RSV";
+    private static final String PREFIX_RESERVATION = "RSV";
+    private static final String PREFIX_ROOM_RESERVATION = "RVR";
+
     private final ReservationRepository repository;
 
     private final AuthService authService;
     private final CustomerService customerService;
-    private final ReservationRoomService reservationRoomService;
+    private final RoomService roomService;
 
     @Transactional(readOnly = true)
     public Page<Reservation> findAll(Pageable pageable) {
@@ -34,19 +39,19 @@ public class ReservationService {
     @Transactional
     public Reservation create(CreateReservationRequest request) {
         Customer customer = customerService.findByCodeOrThrow(request.customerCode());
-        String code = CodeGenerator.next(PREFIX);
         User user = authService.getAuthenticatedUser();
-        Reservation reservation = new Reservation(code, customer, user);
-        Reservation saved = repository.save(reservation);
-        reservationRoomService.create(saved, request.room());
-        return saved;
+        Reservation reservation = new Reservation(CodeGenerator.next(PREFIX_RESERVATION), customer, user);
+        for (CreateReservationRoomRequest roomRequest : request.rooms()) {
+            Room room = roomService.findByCodeOrThrow(roomRequest.roomCode());
+            reservation.addRoom(CodeGenerator.next(PREFIX_ROOM_RESERVATION), room, roomRequest.nights());
+        }
+        return repository.save(reservation);
     }
 
     @Transactional
     public Reservation checkIn(String code) {
         Reservation reservation = findByCodeOrThrow(code);
         reservation.checkIn();
-        reservationRoomService.occupy(reservation);
         return reservation;
     }
 
@@ -54,7 +59,6 @@ public class ReservationService {
     public Reservation checkOut(String code) {
         Reservation reservation = findByCodeOrThrow(code);
         reservation.checkOut();
-        reservationRoomService.done(reservation);
         return reservation;
     }
 
@@ -62,7 +66,6 @@ public class ReservationService {
     public Reservation cancel(String code) {
         Reservation reservation = findByCodeOrThrow(code);
         reservation.cancel();
-        reservationRoomService.cancel(reservation);
         return reservation;
     }
 

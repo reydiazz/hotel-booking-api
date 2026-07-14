@@ -3,6 +3,7 @@ package com.hotel.booking.api.domain.reservation.web.response;
 import com.hotel.booking.api.domain.reservation.model.enums.ReservationStatus;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public record ReservationResponse(
         String code,
@@ -13,6 +14,7 @@ public record ReservationResponse(
         ReservationStatus status,
         LocalDateTime checkIn,
         LocalDateTime checkout,
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+        List<ReservationRoomResponse> rooms
 ) {
 }

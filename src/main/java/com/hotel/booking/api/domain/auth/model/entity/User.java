@@ -1,5 +1,7 @@
 package com.hotel.booking.api.domain.auth.model.entity;
 
+import com.hotel.booking.api.domain.auth.exception.UserAlreadyActiveException;
+import com.hotel.booking.api.domain.auth.exception.UserAlreadyDeactivateException;
 import com.hotel.booking.api.domain.auth.model.enums.Role;
 import com.hotel.booking.api.domain.person.model.entity.Person;
 import jakarta.persistence.*;
@@ -48,11 +50,14 @@ public class User {
     }
 
     public void deactivate() {
+        if (!this.active) throw new UserAlreadyDeactivateException();
         this.active = false;
     }
 
     public void activate() {
+        if (this.active) throw new UserAlreadyActiveException();
         this.active = true;
     }
+
 
 }

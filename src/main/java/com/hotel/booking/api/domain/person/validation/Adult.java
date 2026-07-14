@@ -11,7 +11,7 @@ import java.lang.annotation.*;
 @Documented
 public @interface Adult {
 
-    String message() default "Debe ser mayor de edad";
+    String message() default "Must be of legal age";
 
     Class<?>[] groups() default {};
 

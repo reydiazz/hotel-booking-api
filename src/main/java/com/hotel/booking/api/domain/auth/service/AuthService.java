@@ -1,13 +1,12 @@
 package com.hotel.booking.api.domain.auth.service;
 
 import com.hotel.booking.api.domain.auth.component.AuthMapper;
-import com.hotel.booking.api.domain.auth.exception.auth.AuthenticatedPrincipalNotFoundException;
-import com.hotel.booking.api.domain.auth.exception.auth.NoAuthenticatedUserException;
 import com.hotel.booking.api.domain.auth.web.request.LoginRequest;
 import com.hotel.booking.api.domain.auth.web.response.LoginResponse;
 import com.hotel.booking.api.domain.auth.model.entity.User;
 import com.hotel.booking.api.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -31,20 +30,23 @@ public class AuthService {
     }
 
     private UserPrincipal verifyPrincipal(UserPrincipal principal) {
-        if (principal == null) throw new AuthenticatedPrincipalNotFoundException();
+        if (principal == null) {
+            throw new AuthenticationCredentialsNotFoundException("Authenticated principal not found");
+        }
         return principal;
     }
 
     public User getAuthenticatedUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null) {
-            throw new NoAuthenticatedUserException();
+            throw new AuthenticationCredentialsNotFoundException("No authenticated user found");
         }
         Object principal = auth.getPrincipal();
         if (principal instanceof UserPrincipal(User user)) {
             return user;
         }
-        throw new NoAuthenticatedUserException();
+        throw new AuthenticationCredentialsNotFoundException("No authenticated user found"
+        );
     }
 
 }

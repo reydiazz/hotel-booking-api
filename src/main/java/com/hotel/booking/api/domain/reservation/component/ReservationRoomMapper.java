@@ -4,6 +4,9 @@ import com.hotel.booking.api.domain.reservation.model.entity.ReservationRoom;
 import com.hotel.booking.api.domain.reservation.web.response.ReservationRoomResponse;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class ReservationRoomMapper {
 
@@ -16,6 +19,14 @@ public class ReservationRoomMapper {
                 reservationRoom.getPricePerNight(),
                 reservationRoom.getNights()
         );
+    }
+
+    public List<ReservationRoomResponse> toResponseList(List<ReservationRoom> rooms) {
+        List<ReservationRoomResponse> responseList = new ArrayList<>();
+        for (ReservationRoom reservationRoom : rooms) {
+            responseList.add(toResponse(reservationRoom));
+        }
+        return responseList;
     }
 
 }
