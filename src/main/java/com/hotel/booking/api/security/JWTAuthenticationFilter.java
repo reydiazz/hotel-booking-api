@@ -1,12 +1,17 @@
 package com.hotel.booking.api.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.hotel.booking.api.domain.auth.service.JWTService;
+import com.hotel.booking.api.shared.exception.ErrorResponse;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.annotation.Nonnull;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,6 +19,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 @Component
 @RequiredArgsConstructor
@@ -31,9 +37,25 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             @Nonnull HttpServletRequest request,
             @Nonnull HttpServletResponse response,
             @Nonnull FilterChain chain) throws ServletException, IOException {
-        String token = extractToken(request);
-        if (token != null) authenticateUserIfValid(token);
-        chain.doFilter(request, response);
+        try {
+            String token = extractToken(request);
+            if (token != null) {
+                authenticateUserIfValid(token);
+            }
+            chain.doFilter(request, response);
+        }  catch (ExpiredJwtException ex) {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json;charset=UTF-8");
+        ErrorResponse error = new ErrorResponse(
+                401,
+                "TOKEN_EXPIRED",
+                "The token has expired",
+                LocalDateTime.now()
+        );
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        response.getWriter().write(mapper.writeValueAsString(error));
+    }
     }
 
     private String extractToken(HttpServletRequest request) {
