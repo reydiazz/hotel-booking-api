@@ -1,6 +1,6 @@
 # Hotel Booking API 
 
-API REST para la gestión de reservas de hoteles desarrollada con Spring Boot. El proyecto implementa autenticación mediante JWT, control de acceso por roles y operaciones CRUD para hoteles, habitaciones, clientes y reservas, siguiendo buenas prácticas de desarrollo de APIs REST.
+API REST para la gestión de reservas de hoteles desarrollada con Spring Boot. El proyecto implementa autenticación mediante JWT, control de acceso por roles y operaciones CRUD para hoteles, habitaciones, clientes y reservas, siguiendo buenas prácticas de desarrollo.
 
 ## Características
 
@@ -13,7 +13,6 @@ API REST para la gestión de reservas de hoteles desarrollada con Spring Boot. E
 * Gestión de reservas.
 * Validación de datos.
 * Manejo global de excepciones.
-* Documentación de la API con Swagger / OpenAPI.
 * Persistencia de datos con MySQL.
 
 ## Tecnologías
@@ -94,9 +93,10 @@ mvn clean package
 
 ## Mejoras futuras
 
-* Implementar Refresh Tokens.
-* Consolidar el proceso actual e aumentar mas casos de uso.
-* Pruebas unitarias e integración.
-* Seguimiento de pagos en las reservas.
+* Consolidar el proceso actual y ampliar la cobertura de casos de uso.
+* Desarrollar pruebas unitarias y de integración.
+* Incorporar el seguimiento de pagos asociados a las reservas.
+* Definir y gestionar las fechas de reservas.
+* Implementar el módulo de autoreservas.
 
 
